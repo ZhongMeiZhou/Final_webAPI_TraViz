@@ -7,7 +7,7 @@ class VisualizerAPI < Sinatra::Base
     def get_tours(country)
       Tours.new(country)
     rescue
-      halt 400
+     halt 400
     end
   end
 
@@ -18,8 +18,8 @@ class VisualizerAPI < Sinatra::Base
     end
 
     get '/api/v1/taiwan_tours' do
-      #returns a json using the gem.
       content_type :json
+      get_tours('Taiwan').to_json
     end
 
     get '/api/v1/tours/:country.json' do

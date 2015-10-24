@@ -9,7 +9,7 @@ class TourList
 
   def to_json
     @tours.map do |title, price|
-      { 'title' => title, 'price' => price }
+      { 'title' => title, 'price' => '$'+price }
     end.to_json
   end
 end
@@ -31,8 +31,10 @@ class Tours
   private
   def load_tours
     tour = TourList.new
-    LonelyPlanetScrape::LonelyPlanetTours.new(@country).tours.each do |title, price|
-      tour[title] = price
+    country = LonelyPlanetScrape::LonelyPlanetTours.new(@country)
+    JSON.parse(country.tours).each do |trip|
+      tour[trip['title']] = trip['price']
     end
+    tour.to_json
   end
 end
