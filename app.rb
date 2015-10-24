@@ -9,24 +9,22 @@ class VisualizerAPI < Sinatra::Base
     rescue
       halt 400
     end
+  end
 
+    VERSION = '1.0.0'
 
-VERSION = '1.0.0'
+    get '/' do #current API version and github homepage
+      "Version #{VERSION} is up and running. Find us on Github: https://github.com/ZhongMeiZhou/scraper_webAPI"
+    end
 
-get '/' do #current API version and github homepage
-  "Version #{VERSION} is up and running. Find us on Github: https://github.com/ZhongMeiZhou/scraper_webAPI"
-end
+    get '/api/v1/taiwan_tours' do
+      #returns a json using the gem.
+      content_type :json
+    end
 
-get '/api/v1/taiwan_tours' do
-  #returns a json using the gem.
-  content_type :json
-
-end
-
-get '/api/v1/tours/:country.json' do
-  content_type :json
-  get_tours(params[:country]).to_json
-  #takes a url parameter and returns json
-end
-
+    get '/api/v1/tours/:country.json' do
+      content_type :json
+      get_tours(params[:country]).to_json
+      #takes a url parameter and returns json
+    end
 end
