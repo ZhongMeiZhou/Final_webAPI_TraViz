@@ -1,6 +1,6 @@
 require 'sinatra/base'
 require 'json'
-require_relative './model/lonely_planet_tours.rb'
+require_relative '../model/lonely_planet_tours'
 
 class VisualizerAPI < Sinatra::Base
   helpers do
@@ -19,7 +19,7 @@ end
 
 get_taiwan_tours = lambda do
   content_type :json
-  get_tours('Taiwan').to_json
+  get_tours('taiwan').to_json
 end
 
 get_country_tours = lambda do

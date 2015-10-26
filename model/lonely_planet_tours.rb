@@ -38,3 +38,7 @@ class Tours
     tour.to_json
   end
 end
+
+#caused problem with tests
+#test = Tours.new('taiwan')
+#puts test.to_json
