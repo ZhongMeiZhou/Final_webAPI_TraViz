@@ -11,20 +11,24 @@ class VisualizerAPI < Sinatra::Base
     end
   end
 
-    VERSION = '1.0.0'
+VERSION = '1.0.0'
 
-    get '/' do #current API version and github homepage
-      "Version #{VERSION} is up and running. Find us on Github: https://github.com/ZhongMeiZhou/scraper_webAPI"
-    end
+get_root = lambda do
+    "Version #{VERSION} is up and running. Find us on Github: https://github.com/ZhongMeiZhou/scraper_webAPI"
+end
 
-    get '/api/v1/taiwan_tours' do
-      content_type :json
-      get_tours('Taiwan').to_json
-    end
+get_taiwan_tours = lambda do
+  content_type :json
+  get_tours('Taiwan').to_json
+end
 
-    get '/api/v1/tours/:country.json' do
-      content_type :json
-      get_tours(params[:country]).to_json
-      #takes a url parameter and returns json
-    end
+get_country_tours = lambda do
+  content_type :json
+  get_tours(params[:country]).to_json
+end
+
+#API Routes
+get '/', &get_root
+get '/api/v1/taiwan_tours', &get_taiwan_tours
+get '/api/v1/tours/:country.json', &get_country_tours
 end
