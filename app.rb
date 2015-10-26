@@ -1,6 +1,6 @@
 require 'sinatra/base'
 require 'json'
-require_relative '../model/lonely_planet_tours'
+require_relative 'model/lonely_planet_tours'
 
 class VisualizerAPI < Sinatra::Base
   helpers do

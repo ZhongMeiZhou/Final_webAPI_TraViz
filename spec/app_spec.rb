@@ -11,7 +11,7 @@ end
 
 describe "Getting tour details" do
   CONTENT_TYPE = 'application/json'
-  
+
   it "should return taiwan tour list in JSON format" do
     VCR.use_cassette('taiwan_tours') do
       get '/api/v1/taiwan_tours'
