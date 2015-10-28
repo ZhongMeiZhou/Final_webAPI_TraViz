@@ -9,10 +9,10 @@ describe "Check if service root is valid" do
   end
 end
 
-describe "Getting tour details" do
+describe "Getting tour listings" do
   CONTENT_TYPE = 'application/json'
-
-  it "should return taiwan tour list in JSON format" do
+  
+  it "should return JSON formatted taiwan tour listings" do
     VCR.use_cassette('taiwan_tours') do
       get '/api/v1/taiwan_tours'
     end
@@ -20,7 +20,7 @@ describe "Getting tour details" do
     last_response.headers['Content-Type'].must_equal CONTENT_TYPE
   end
 
-  it "should return tour list based on country specified" do
+  it "should return JSON formatted tour listings based on specified country" do
     VCR.use_cassette('honduras_tours') do
       get '/api/v1/tours/honduras.json'
     end
@@ -28,10 +28,29 @@ describe "Getting tour details" do
     last_response.headers['Content-Type'].must_equal CONTENT_TYPE
   end
 
-  it "should return 400 for unknown country tour requests" do
-    VCR.use_cassette('zamunda_tours') do
+  it "should return 404 for unknown country tour requests" do
+    VCR.use_cassette('zamunda_tours') do #zamunda is a fictional country name
       get '/api/v1/tours/zamunda.json'
     end
-    last_response.status.must_equal 400
+    last_response.status.must_equal 404
+  end
+end
+
+describe 'Checking post requests' do
+  header = {'CONTENT_TYPE' => 'application/json'}
+
+  it "should return 400 for bad JSON formatting" do
+    body = 'abcdefghijklmnopqwyu'
+    post '/api/v1/check', body, header
+    last_response.must_be :bad_request?
+  end
+
+  it "should return 404 for unknown country" do
+    body = {country: 'zamunda'}
+    VCR.use_cassette('post_zamunda') do #zamunda is a fictional country name
+      post '/api/v1/check', body.to_json, header
+    end
+    last_response.status.must_equal 404
+    #last_response.must_be :not_found?
   end
 end
