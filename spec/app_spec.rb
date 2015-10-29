@@ -1,15 +1,15 @@
 require_relative 'spec_helper'
 require 'json'
 
-describe "Check if service is active" do
-  it "should return ok" do
+describe 'Check if service is active' do
+  it 'should return ok' do
     get '/'
     last_response.must_be :ok?
   end
 end
 
-describe "Check if there is some data" do
-  it "should return taiwan tour list in json" do
+describe 'Check if there is some data' do
+  it 'should return taiwan tour list in json' do
     VCR.use_cassette('taiwan_tours') do
       get '/api/v1/taiwan_tours'
     end
@@ -18,8 +18,8 @@ describe "Check if there is some data" do
   end
 end
 
-describe "Check parameter results" do
-  it "should receive parameter and return a json" do
+describe 'Check parameter results' do
+  it 'should receive parameter and return a json' do
     VCR.use_cassette('honduras_tours') do
       get '/api/v1/tours/honduras.json'
     end
@@ -28,8 +28,8 @@ describe "Check parameter results" do
   end
 end
 
-describe "Check bad parameter results" do
-  it "should return nothing" do
+describe 'Check bad parameter results' do
+  it 'should return nothing' do
     VCR.use_cassette('zamunda_tours') do
       get '/api/v1/tours/zamunda.json'
     end

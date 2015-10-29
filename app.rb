@@ -10,14 +10,14 @@ class VisualizerAPI < Sinatra::Base
     def get_tours(country)
       Tours.new(country)
     rescue
-     halt 400
+      halt 400
     end
   end
 
   VERSION = '1.0.0'
 
   get_root = lambda do
-      "Version #{VERSION} is up and running. Find us on Github: https://github.com/ZhongMeiZhou/scraper_webAPI"
+    "Version #{VERSION} is up and running. Find us on Github: https://github.com/ZhongMeiZhou/scraper_webAPI"
   end
 
   get_taiwan_tours = lambda do
@@ -41,7 +41,7 @@ class VisualizerAPI < Sinatra::Base
     get_tours(req['country']).to_json
   end
 
-#API Routes
+  # API Routes
   get '/', &get_root
   get '/api/v1/taiwan_tours', &get_taiwan_tours
   get '/api/v1/tours/:country.json', &get_country_tours
