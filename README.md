@@ -22,7 +22,7 @@ Handles:
   - Returns tours information of the provided country in JSON format.
   - Example: http://localhost:9292/api/v1/tours/Japan.json
 
-  - POST /api/v1/tours
-    - Takes JSON: country parameter
-    - returns JSON: Tours information available for the given country
-    - Example: curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"country\":\"Honduras\"}" http://localhost:9292/api/v1/tours
+- POST /api/v1/tours
+  - Takes JSON: country parameter
+  - returns JSON: Tours information available for the given country
+  - Example: curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"country\":\"Honduras\"}" http://localhost:9292/api/v1/tours
