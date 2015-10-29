@@ -36,3 +36,18 @@ describe 'Check bad parameter results' do
     last_response.body.must_equal ''
   end
 end
+
+describe 'Obtaining data by post parameter' do
+  it 'should push a post request and return a json' do
+    header = { 'CONTENT_TYPE' => 'application/json'}
+    body = {
+      country: 'Honduras'
+    }
+
+    VCR.use_cassette('post_tours') do
+      post 'api/v1/tours', body.to_json, header
+    end
+    last_response.must_be :ok?
+    last_response.body.wont_equal ''
+  end
+end
