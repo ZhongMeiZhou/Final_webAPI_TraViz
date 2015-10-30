@@ -10,7 +10,7 @@ class VisualizerAPI < Sinatra::Base
     def get_tours(country)
       Tours.new(country)
     rescue
-      halt 400
+      halt 404
     end
   end
 
@@ -27,18 +27,21 @@ class VisualizerAPI < Sinatra::Base
 
   get_country_tours = lambda do
     content_type :json
-    get_tours(params[:country]).to_json
+    begin
+      get_tours(params[:country]).to_json
+    rescue
+      halt 400
+    end
   end
 
   post_tours = lambda do
     content_type :json
     begin
       req = JSON.parse(request.body.read)
+      get_tours(req['country']).to_json
     rescue
       halt 400
     end
-
-    get_tours(req['country']).to_json
   end
 
   # API Routes
