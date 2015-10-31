@@ -1,23 +1,15 @@
 require 'sinatra/base'
 require 'json'
-require_relative './model/lonely_planet_tours.rb'
+require_relative 'app_helper'
 
 class VisualizerAPI < Sinatra::Base
   configure :production, :development do
     enable :logging
   end
-  helpers do
-    def get_tours(country)
-      Tours.new(country)
-    rescue
-      halt 404
-    end
-  end
-
-  VERSION = '1.0.0'
+  helpers VisualizerAPIHelpers
 
   get_root = lambda do
-    "Version #{VERSION} is up and running. Find us on Github: https://github.com/ZhongMeiZhou/scraper_webAPI"
+    "Version #{VERSION} is up and running. Find us on <a href='https://github.com/ZhongMeiZhou/scraper_webAPI' target='_blank'>Github.</a>"
   end
 
   get_taiwan_tours = lambda do
