@@ -1,9 +1,16 @@
-#LPTours Webservice
+#LPTours Webservice 
+
+## Endpoint
+  
+  ```sh
+ http://zmztours.herokuapp.com/
+ ```
 
 
 ## Description
 
 A simple version of web service that scrapes Lonely Planet data using the [lonely_planet_tours](https://github.com/ZhongMeiZhou/scraper_project)
+
 
 ## Usage and Examples
 
