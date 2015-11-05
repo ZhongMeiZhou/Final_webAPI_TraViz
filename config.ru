@@ -1,2 +1,2 @@
-require './app.rb'
-run VisualizerAPI
+require './application_controller.rb'
+run ApplicationController

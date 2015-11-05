@@ -2,7 +2,7 @@ require 'sinatra/base'
 require 'json'
 require_relative 'app_helper'
 
-class VisualizerAPI < Sinatra::Base
+class ApplicationController < Sinatra::Base
   configure :production, :development do
     enable :logging
   end
