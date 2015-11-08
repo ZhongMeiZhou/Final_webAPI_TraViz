@@ -42,5 +42,4 @@ class ApplicationController < Sinatra::Base
   get '/api/v1/taiwan_tours', &get_taiwan_tours
   get '/api/v1/tours/:country.json', &get_country_tours
   post '/api/v1/tours', &post_tours
-  post '/api/v1/'
 end
