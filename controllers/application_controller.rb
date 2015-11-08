@@ -34,24 +34,27 @@ class ApplicationController < Sinatra::Base
     content_type :json
     begin
       req = JSON.parse(request.body.read)
-      list = get_tours(req['country'])
+      list = get_tours(req['country']).to_json
+      puts JSON.parse(list)['tours']
+
 
       # Save tours
 
       begin 
-        list.each do |key, value|
+        JSON.parse(JSON.parse(list)['tours']).each do |key, value|
           Tour.new(
             country: req['country'],
-            title: key, 
+            title: key.to_s, 
             price: value
             ).save
+          
         end
 
         status 201
         redirect "/api/v1/tutorials/#{req['country']}.json", 303
 
-      rescue
-        halt 500, 'Error saving Tours to the database'
+      rescue Exception => e
+        halt 500, "Error saving Tours to the database., #{e.message} ,#{e.backtrace}"
       end
     rescue StandardError => e
       logger.info e.message
