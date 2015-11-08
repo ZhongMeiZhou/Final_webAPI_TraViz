@@ -24,7 +24,7 @@ class ApplicationController < Sinatra::Base
     content_type :json
     begin
       # Get Tours from database
-      Tour.where(["country = ?", params[:country].downcase]).to_json
+      response = { "country" => params[:country].downcase , "tours" => Tour.where(["country = ?", params[:country].downcase]).to_json }.to_json
     rescue StandardError => e
       logger.info e.message
       halt 400
