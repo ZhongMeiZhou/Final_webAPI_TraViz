@@ -1,3 +1,5 @@
+Dir.glob('./{controllers,models,helpers}/*.rb').each { |file| require file }
+require 'sinatra/activerecord/rake'
 require 'rake/testtask'
 
 task :default => :spec
