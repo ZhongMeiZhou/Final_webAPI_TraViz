@@ -31,5 +31,5 @@ Handles:
 
 - POST /api/v1/tours
   - Takes JSON: country parameter
-  - returns JSON: Tours information available for the given country
+  - returns JSON: Redirect to Get Route /api/v1/tours/[:param].json
   - Example: curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"country\":\"Honduras\"}" http://localhost:9292/api/v1/tours

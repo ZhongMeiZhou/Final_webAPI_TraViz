@@ -3,10 +3,13 @@ require 'json'
 require './helpers/app_helper'
 
 class ApplicationController < Sinatra::Base
+  
   configure :production, :development do
     enable :logging
   end
+
   helpers VisualizerAPIHelpers
+  
 
   get_root = lambda do
     "Version #{VERSION} is up and running. Find us on <a href='https://github.com/ZhongMeiZhou/scraper_webAPI' target='_blank'>Github.</a>"
@@ -20,7 +23,11 @@ class ApplicationController < Sinatra::Base
   get_country_tours = lambda do
     content_type :json
     begin
-      get_tours(params[:country]).to_json
+      # Get Tours from database
+      response = { 
+        "country" => params[:country].downcase ,
+        "tours" => Tour.where(["country = ?", params[:country].downcase]) }.to_json(:except => [ :id])
+      
     rescue StandardError => e
       logger.info e.message
       halt 400
@@ -31,7 +38,31 @@ class ApplicationController < Sinatra::Base
     content_type :json
     begin
       req = JSON.parse(request.body.read)
-      get_tours(req['country']).to_json
+      list = get_tours(req['country']).to_json
+      puts JSON.parse(list)['tours']
+
+
+      # Save tours
+
+      begin 
+        #delete before
+        Tour.where(["country = ?", req['country'].downcase]).delete_all
+        JSON.parse(JSON.parse(list)['tours']).each do |tour|
+          
+          Tour.new(
+            country: req['country'].downcase,
+            title: tour['title'].to_s.gsub(/\r/," "), 
+            price: tour['price'].gsub(/\r/," ")
+            ).save
+          
+        end
+
+        status 201
+        redirect "/api/v1/tutorials/#{req['country']}.json", 303
+
+      rescue Exception => e
+        halt 500, "Error saving Tours to the database., #{e.message} ,#{e.backtrace}"
+      end
     rescue StandardError => e
       logger.info e.message
       halt 400
