@@ -67,40 +67,37 @@ end
 
 describe 'checking country tours from DB' do
   it 'should find country tour information on DB' do
-    header =  { 'CONTENT_TYPE' => 'application/json' }
-    body = {
-      country: 'nicaragua'
-    }
-      # Check redirect URL from post request
+    header = { 'CONTENT_TYPE' => 'application/json' }
+    body = { country: 'belize' }
+
+    # Check redirect URL from post request
+    VCR.use_cassette('tours_happy') do
       post '/api/v1/tours', body.to_json, header
       last_response.must_be :redirect?
       next_location = last_response.location
       next_location.must_match %r{api\/v1\/tours\/\d+}
 
-      #Check if request parameters are stored in ActiveRecord data store
+    #Check if request parameters are stored in ActiveRecord data store
       tour_id = next_location.scan(%r{tours\/(\d+)}).flatten[0].to_i
       save_tour = Tour.find(tour_id)
-      JSON.parse(save_tour[:country]).must_equal body[:country]
+      save_tour.country.must_equal body[:country]
 
-      # Check if redirect works
-      VCR.use_cassette('tours_happy') do
-        follow_redirect!
-      end
+    # Check if redirect works
+
+      follow_redirect!
+
       last_request.url.must_match %r{api\/v1\/tours\/\d+}
 
-      # Check if redirected response has results
+    #Check if redirected response has results
       JSON.parse(last_response.body).count.must_be :>, 0
     end
+  end
 
     it 'should return 404 for unknown countries' do
         header = { 'CONTENT_TYPE' => 'application/json' }
         body = {country: 'zamunda'}
 
         post '/api/v1/tours', body.to_json, header
-        last_response.must_be :redirect?
-        VCR.use_cassette('tour_sad_404') do
-          follow_redirect!
-        end
         last_response.must_be :not_found?
       end
 
@@ -108,7 +105,7 @@ describe 'checking country tours from DB' do
         header = { 'CONTENT_TYPE' => 'application/json' }
         body = 'abcdefghijklmnopqrstuvwz'
 
-        post '/api/v1/tutorials', body, header
+        post '/api/v1/tours', body, header
         last_response.must_be :bad_request?
       end
 

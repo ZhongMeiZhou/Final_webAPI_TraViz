@@ -7,6 +7,6 @@ module VisualizerAPIHelpers
       Tours.new(country)
     rescue StandardError => e
       logger.info e.message
-      halt 404
+      halt 404, "#{e.message}"
     end
 end

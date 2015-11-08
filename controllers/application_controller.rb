@@ -1,6 +1,7 @@
 require 'sinatra/base'
 require 'json'
 require './helpers/app_helper'
+require './models/tour'
 
 class ApplicationController < Sinatra::Base
 
@@ -39,8 +40,8 @@ class ApplicationController < Sinatra::Base
     begin
       req = JSON.parse(request.body.read)
       list = get_tours(req['country']).to_json
-      logger.info req
-      puts JSON.parse(list)['tours']
+      #logger.info req
+      #puts JSON.parse(list)['tours']
     rescue StandardError => e
       logger.info e.message
       halt 400
