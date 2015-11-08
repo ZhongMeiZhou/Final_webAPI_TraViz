@@ -20,66 +20,61 @@ class ApplicationController < Sinatra::Base
     get_tours('Taiwan').to_json
   end
 
+  # revised GET route
   get_country_tours = lambda do
     content_type :json
     begin
-      # Get Tours from database
+      country = params[:country].downcase
+      post = Tour.where(["country = ?", country])
+
+      # if atleast one tour exists use db results or else scrape for results
+      if !post.empty?
       response = { 
-        "country" => params[:country].downcase ,
-        "tours" => Tour.where(["country = ?", params[:country].downcase]) }.to_json(:except => [ :id])
-      
+        "country" => country,
+        "tours" => post
+        }.to_json(:except => [:id,:created_at,:updated_at,:country])
+      else
+        response = get_tours(country).to_json
+      end
+
     rescue StandardError => e
       logger.info e.message
       halt 400
     end
   end
 
+
   post_tours = lambda do
     content_type :json
     begin
       req = JSON.parse(request.body.read)
-      list = get_tours(req['country']).to_json
-      puts JSON.parse(list)['tours']
-
+      country = req['country'].downcase
+      list = get_tours(country).to_json
+      #puts JSON.parse(list)['tours']
 
       # Save tours
-
       begin 
         #delete before
-        Tour.where(["country = ?", req['country'].downcase]).delete_all
+        Tour.where(["country = ?", country]).delete_all
         JSON.parse(JSON.parse(list)['tours']).each do |tour|
           
           Tour.new(
-            country: req['country'].downcase,
+            country: country,
             title: tour['title'].to_s.gsub(/\r/," "), 
-            price: tour['price'].gsub(/\r/," ")
+            price: tour['price'].to_f
             ).save
           
         end
-
         status 201
-        redirect "/api/v1/tutorials/#{req['country']}.json", 303
-
+        redirect "/api/v1/tours/#{country}.json", 303
       rescue Exception => e
-        halt 500, "Error saving Tours to the database., #{e.message} ,#{e.backtrace}"
+        halt 500, "Error saving tour to the database., #{e.message} ,#{e.backtrace}"
       end
+
     rescue StandardError => e
       logger.info e.message
       halt 400
     end
-
-    tour = Tour.new(
-      country: req['country'],
-      tours:  req['tours'].to_json
-      )
-
-    if tour.save
-      status 201
-      redirect "http://www.lonelyplanet.com/#{tour.country}/tours", 303
-    else
-      halt 500, 'Error saving tour request to database'
-    end
-
   end
 
   # API Routes

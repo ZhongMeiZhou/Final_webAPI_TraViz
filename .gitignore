@@ -1,7 +1,1 @@
-<<<<<<< Updated upstream
 db/*.db
-
-=======
-.bundle/
-db/*.db
->>>>>>> Stashed changes
