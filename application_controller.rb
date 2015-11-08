@@ -2,7 +2,7 @@ require 'sinatra/base'
 require 'json'
 require_relative 'app_helper'
 
-class VisualizerAPI < Sinatra::Base
+class ApplicationController < Sinatra::Base
   configure :production, :development do
     enable :logging
   end
@@ -21,7 +21,8 @@ class VisualizerAPI < Sinatra::Base
     content_type :json
     begin
       get_tours(params[:country]).to_json
-    rescue
+    rescue StandardError => e
+      logger.info e.message
       halt 400
     end
   end
@@ -31,7 +32,8 @@ class VisualizerAPI < Sinatra::Base
     begin
       req = JSON.parse(request.body.read)
       get_tours(req['country']).to_json
-    rescue
+    rescue StandardError => e
+      logger.info e.message
       halt 400
     end
   end

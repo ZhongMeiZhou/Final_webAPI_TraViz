@@ -5,7 +5,8 @@ module VisualizerAPIHelpers
 
 	def get_tours(country)
       Tours.new(country)
-    rescue
-     halt 404
+    rescue StandardError => e
+      logger.info e.message
+      halt 404
     end
 end
