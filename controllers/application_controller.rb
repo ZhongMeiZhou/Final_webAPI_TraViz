@@ -20,7 +20,8 @@ class ApplicationController < Sinatra::Base
   get_country_tours = lambda do
     content_type :json
     begin
-      get_tours(params[:country]).to_json
+      # Get Tours from database
+      Tour.where(["country = ?", params[:country]]).to_json
     rescue StandardError => e
       logger.info e.message
       halt 400
