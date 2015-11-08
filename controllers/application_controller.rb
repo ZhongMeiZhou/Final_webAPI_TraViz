@@ -23,7 +23,7 @@ class ApplicationController < Sinatra::Base
     content_type :json
     begin
       # Get Tours from database
-      Tour.where(["country = ?", params[:country]]).to_json
+      Tour.where(["country = ?", params[:country].downcase]).to_json
     rescue StandardError => e
       logger.info e.message
       halt 400
@@ -41,9 +41,11 @@ class ApplicationController < Sinatra::Base
       # Save tours
 
       begin 
+        #delete before
+        Tour.where(["country = ?", req['country'].downcase]).delete_all
         JSON.parse(JSON.parse(list)['tours']).each do |key, value|
           Tour.new(
-            country: req['country'],
+            country: req['country'].downcase,
             title: key.to_s, 
             price: value
             ).save
