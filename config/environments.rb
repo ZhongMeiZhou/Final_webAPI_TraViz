@@ -1,5 +1,5 @@
 configure :development, :test do
-	ActiveRecord::Base.configuration = YAML.load_file('config/database.yml')
+	ActiveRecord::Base.configurations = YAML.load_file('config/database.yml')
 end
 
 configure :production do
