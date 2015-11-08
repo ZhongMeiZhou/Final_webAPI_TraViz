@@ -36,6 +36,19 @@ class ApplicationController < Sinatra::Base
       logger.info e.message
       halt 400
     end
+
+    tour = Tour.new(
+      country: req['country'],
+      tours:  req['tours'].to_json
+      )
+
+    if tour.save
+      status 201
+      redirect "http://www.lonelyplanet.com/#{tour.country}/tours", 303
+    else
+      halt 500, 'Error saving tour request to database'
+    end
+
   end
 
   # API Routes
