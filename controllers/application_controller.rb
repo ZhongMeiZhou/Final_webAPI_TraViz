@@ -2,10 +2,12 @@ require 'sinatra/base'
 require 'json'
 
 class ApplicationController < Sinatra::Base
-  helpers VisualizerAPIHelpers
+  
   configure :production, :development do
     enable :logging
   end
+
+  helpers VisualizerAPIHelpers
   
 
   get_root = lambda do
