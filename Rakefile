@@ -1,6 +1,5 @@
-Dir.glob('./{controllers,models,helpers}/*.rb').each { |file| require file }
+Dir.glob('./{models,helpers,controllers}/*.rb').each { |file| require file }
 
-#https://github.com/janko-m/sinatra-activerecord/issues/36
 require 'rake/testtask'
 require 'sinatra/activerecord'
 require 'sinatra/activerecord/rake'
