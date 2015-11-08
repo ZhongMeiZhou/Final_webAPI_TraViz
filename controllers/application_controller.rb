@@ -2,10 +2,11 @@ require 'sinatra/base'
 require 'json'
 
 class ApplicationController < Sinatra::Base
+  helpers VisualizerAPIHelpers
   configure :production, :development do
     enable :logging
   end
-  helpers VisualizerAPIHelpers
+  
 
   get_root = lambda do
     "Version #{VERSION} is up and running. Find us on <a href='https://github.com/ZhongMeiZhou/scraper_webAPI' target='_blank'>Github.</a>"
