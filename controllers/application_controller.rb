@@ -50,13 +50,6 @@ class ApplicationController < Sinatra::Base
       rescue
         halt 500, 'Error saving Tours to the database'
       end
-
-      # if tutorial.save
-      #   status 201
-      #   redirect "/api/v1/tutorials/#{tutorial.id}", 303
-      # else
-      #   halt 500, 'Error saving tutorial request to the database'
-      # end
     rescue StandardError => e
       logger.info e.message
       halt 400
