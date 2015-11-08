@@ -1,6 +1,6 @@
 require 'sinatra/base'
 require 'json'
-require_relative '../helper/app_helper'
+require './helpers/app_helper'
 
 class ApplicationController < Sinatra::Base
   configure :production, :development do
