@@ -1,6 +1,5 @@
 require 'sinatra/base'
 require 'json'
-require_relative 'app_helper'
 
 class ApplicationController < Sinatra::Base
   helpers VisualizerAPIHelpers
