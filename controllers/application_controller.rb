@@ -50,7 +50,7 @@ class ApplicationController < Sinatra::Base
       req = JSON.parse(request.body.read)
       country = req['country'].downcase
       list = get_tours(country).to_json
-      #puts JSON.parse(list)['tours']
+      puts JSON.parse(list)['tours']
 
       # Save tours
       begin 
@@ -60,8 +60,8 @@ class ApplicationController < Sinatra::Base
           
           Tour.new(
             country: country,
-            title: tour['title'].to_s.gsub(/\r/," "), 
-            price: tour['price'].to_f
+            title: tour['title'].to_s.gsub(/\r/," "), #check encoding, some characters not shown properly
+            price: tour['price'] #price not converting properly, saving as 0.00, check why!
             ).save
           
         end
