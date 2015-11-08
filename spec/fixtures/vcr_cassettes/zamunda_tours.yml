@@ -27,23 +27,23 @@ http_interactions:
       Accept-Ranges:
       - bytes
       Date:
-      - Mon, 26 Oct 2015 07:08:40 GMT
+      - Sun, 08 Nov 2015 13:52:12 GMT
       Via:
       - 1.1 varnish
       Connection:
       - close
       X-Served-By:
-      - cache-bma7028-BMA
+      - cache-bma7029-BMA
       X-Cache:
       - MISS
       X-Cache-Hits:
       - '0'
       X-Timer:
-      - S1445843320.612073,VS0,VE387
+      - S1446990732.130576,VS0,VE411
       Set-Cookie:
       - localeCookie=en_TW; Domain=lonelyplanet.com; Path=/
       - lpCurrency=USD; Domain=lonelyplanet.com; Path=/
-      - lpUid=mgRrPnFZF26KnpEw9tGbPXeozqzV3OR0; expires=Tue, 25 Oct 2016 07:08:40
+      - lpUid=8xXf5bTKUSnldNHGhznFS63ufRFrA2R5; expires=Mon, 07 Nov 2016 13:52:12
         GMT; Domain=lonelyplanet.com; Path=/
       X-Geoip-Countrycode:
       - TW
@@ -99,5 +99,5 @@ http_interactions:
         window.location.href\n\t});\n\t//]]>\n      </script>\n      <!-- FASTLY404
         -->\n    </body>\n  </html>\n  "
     http_version: 
-  recorded_at: Mon, 26 Oct 2015 07:08:41 GMT
-recorded_with: VCR 2.9.3
+  recorded_at: Sun, 08 Nov 2015 13:52:09 GMT
+recorded_with: VCR 3.0.0

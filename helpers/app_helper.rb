@@ -1,3 +1,5 @@
+require_relative '../models/lonely_planet_tours'
+
 module VisualizerAPIHelpers
 	VERSION = '1.0.1'
 
