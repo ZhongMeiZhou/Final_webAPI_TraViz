@@ -1,4 +1,5 @@
 require_relative 'model/lonely_planet_tours'
+require_relative 'model/LP_tours'
 
 module VisualizerAPIHelpers
 	VERSION = '1.0.1'

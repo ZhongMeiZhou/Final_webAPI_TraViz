@@ -1,15 +1,15 @@
 configure :development, :test do
-	ActiveRecord::Base.configuration = YAML.load_file('config/database.yml')
+	ActiveRecord::Base.configurations = YAML.load_file('config/database.yml')
 end
 
 configure :production do
-	db = URI.parse(ENV['DATABASE_URL'] || 'postgres:///localhost/mydb')
+	db = URI.parse(ENV['DATABASE_URL'] || 'postgres:///localhost/lp_tours')
 
 	ActiveRecord::Base.establish_connection(
 	  adapter: db.scheme == 'postgres' ? 'postgresql' : db.scheme,
 	  host:    db.host,
 	  username:db.user,
-	  password:db.password
+	  password:db.password,
 	  database:db.path[1..-1],
 	  encoding:'utf8'
 	  )
