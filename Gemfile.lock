@@ -24,7 +24,7 @@ GEM
       safe_yaml (~> 1.0.0)
     daemons (1.2.3)
     eventmachine (1.0.8)
-    hashdiff (0.2.2)
+    hashdiff (0.2.3)
     i18n (0.7.0)
     json (1.8.3)
     lonely_planet_tours (1.0.3)
@@ -74,8 +74,8 @@ GEM
       sinatra (>= 1.2.1)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
-    vcr (2.9.3)
-    webmock (1.22.2)
+    vcr (3.0.0)
+    webmock (1.22.3)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
@@ -99,6 +99,3 @@ DEPENDENCIES
   tux
   vcr
   webmock
-
-BUNDLED WITH
-   1.10.6
