@@ -87,14 +87,9 @@ describe 'checking country tours from DB' do
       last_request.url.must_match %r{api\/v1\/tours\/\d+}
 
       #Check if redirected response has results
+      last_response.body.wont_equal ''
       JSON.parse(last_response.body).count.must_be :>, 0
     end
-
-
-
-
-
-    
   end
 
     it 'should return 404 for unknown countries' do

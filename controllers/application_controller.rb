@@ -20,8 +20,7 @@ class ApplicationController < Sinatra::Base
     get_tours('taiwan').to_json
   end
 
-  # revised GET route
-   get_country_tours = lambda do
+  get_country_tours = lambda do
     content_type :json
     begin
       get_tours(params[:country]).to_json
@@ -36,25 +35,27 @@ class ApplicationController < Sinatra::Base
     content_type :json
     begin
       req = JSON.parse(request.body.read)
-      list = get_tours(req['country']).to_json
-
+      logger.info req
+      country = req['country'].downcase
+      scraped_list = get_tours(country).to_json
+      only_tours = JSON.parse(scraped_list)['tours']
     rescue StandardError => e
       logger.info e.message
       halt 400
     end
-    Tour.where(["country = ?", req['country'].downcase]).delete_all
-    #JSON.parse(JSON.parse(list)['tours']).each do |tour|
-    db_tour = Tour.new(country: req['country'].downcase, tours: JSON.parse(list)['tours'])
-    #title: tour['title'].gsub(/\r/," ").to_s,
-    #price: 100.3 #tour['price'].gsub(/\r/," ").to_f)
-    #end
+
+    #remove existing tour details for country if exists to update with latest results
+    #may be more efficient to compare results rather than rewriting data that may be the same
+    #Tour.where(["country = ?", country]).delete_all
+    #check_if_exists = Tour.where(["country = ?", country])
+
+    db_tour = Tour.new(country: country, tours: only_tours)
+
     if db_tour.save
       status 201
       redirect "/api/v1/tours/#{db_tour.id}", 303
-      #rescue Exception => e
-      #  halt 500, "Error saving Tours to the database., #{e.message} ,#{e.backtrace}"
     else
-      halt 500, "Error saving Tours to the database"
+      halt 500, "Error saving tours to the database"
     end
   end
 
@@ -64,11 +65,8 @@ class ApplicationController < Sinatra::Base
         tour= Tour.find(params[:id])
         country = tour.country
         tours = tour.tours
-        #title = tour.title
-        #price = tour.price
         logger.info({ id: tour.id, country: country }.to_json)
         { id: tour.id, country: country, tours: tours}.to_json
-          #title: title, price: price}.to_json
       rescue
         halt 400
       end
@@ -78,7 +76,6 @@ class ApplicationController < Sinatra::Base
   get '/', &get_root
   get '/api/v1/taiwan_tours', &get_taiwan_tours
   get '/api/v1/tours/:country.json', &get_country_tours
-
   get '/api/v1/tours/:id', &get_tour_id
   post '/api/v1/tours', &post_tours
 end
