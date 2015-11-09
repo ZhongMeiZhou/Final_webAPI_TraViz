@@ -44,25 +44,41 @@ class ApplicationController < Sinatra::Base
       halt 400
     end
 
-    #remove existing tour details for country if exists to update with latest results
-    #may be more efficient to compare results rather than rewriting data that may be the same
     #Tour.where(["country = ?", country]).delete_all
-    #check_if_exists = Tour.where(["country = ?", country])
+    check_if_exists = Tour.where(["country = ?", country]).first
 
-    db_tour = Tour.new(country: country, tours: only_tours)
-
-    if db_tour.save
-      status 201
-      redirect "/api/v1/tours/#{db_tour.id}", 303
+    #if country tour details has not changed then show existing DB results
+    if check_if_exists && check_if_exists.country == country && check_if_exists.tours == only_tours
+      id = check_if_exists.id
+      redirect "/api/v1/tours/#{id}", 303
     else
-      halt 500, "Error saving tours to the database"
+      #if tours has changed just update the tour details
+      if check_if_exists && check_if_exists.tours != only_tours && check_if_exists.country == country
+        tour = Tour.find_by(country: country)
+        tour.tours = only_tours
+        if tour.save
+          status 201
+          redirect "/api/v1/tours/#{tour.id}", 303
+        else
+          halt 500, "Error updating tour details"
+        end
+      else # if country not yet exists in the DB, save it
+        db_tour = Tour.new(country: country, tours: only_tours)
+        if db_tour.save
+          status 201
+          redirect "/api/v1/tours/#{db_tour.id}", 303
+        else
+          halt 500, "Error saving tours to the database"
+        end
+      end
     end
-  end
+ end
+
 
   get_tour_id = lambda do
       content_type :json
       begin
-        tour= Tour.find(params[:id])
+        tour = Tour.find(params[:id])
         country = tour.country
         tours = tour.tours
         logger.info({ id: tour.id, country: country }.to_json)
