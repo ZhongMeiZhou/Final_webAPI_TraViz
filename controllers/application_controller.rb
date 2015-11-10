@@ -36,7 +36,6 @@ class ApplicationController < Sinatra::Base
 
   get_root = lambda do
     slim :home
-    #"Version #{VERSION} is up and running. Find us on <a href='https://github.com/ZhongMeiZhou/scraper_webAPI' target='_blank'>Github.</a>"
   end
 
   get_taiwan_tours = lambda do
