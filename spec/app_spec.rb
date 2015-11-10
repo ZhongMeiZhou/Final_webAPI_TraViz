@@ -66,7 +66,7 @@ end
 #end
 
 describe 'checking country tours from DB' do
-  it 'should find country tour information on DB' do
+  it 'should find country tour information in DB' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = { country: 'belize' }
 
@@ -77,18 +77,17 @@ describe 'checking country tours from DB' do
       next_location = last_response.location
       next_location.must_match %r{api\/v1\/tours\/\d+}
 
-    #Check if request parameters are stored in ActiveRecord data store
+      #Check if request parameters are stored in ActiveRecord data store
       tour_id = next_location.scan(%r{tours\/(\d+)}).flatten[0].to_i
       save_tour = Tour.find(tour_id)
       save_tour.country.must_equal body[:country]
 
-    # Check if redirect works
-
+      # Check if redirect works
       follow_redirect!
-
       last_request.url.must_match %r{api\/v1\/tours\/\d+}
 
-    #Check if redirected response has results
+      #Check if redirected response has results
+      last_response.body.wont_equal ''
       JSON.parse(last_response.body).count.must_be :>, 0
     end
   end

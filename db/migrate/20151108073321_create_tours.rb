@@ -1,5 +1,6 @@
 class CreateTours < ActiveRecord::Migration
   def change
+  	#drop_table :tours
   	create_table :tours do |t|
   	  t.string  :country
   	  t.text :tours
@@ -7,5 +8,3 @@ class CreateTours < ActiveRecord::Migration
   	end
   end
 end
-
-# run rake db:migrate
