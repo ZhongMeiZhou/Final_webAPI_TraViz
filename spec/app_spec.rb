@@ -6,7 +6,7 @@ describe 'Check if service root is valid' do
   it 'should return ok' do
     get '/'
     last_response.must_be :ok?
-    last_response.body.must_match(/ZhongMeiZhou/)
+    #last_response.body.must_match(/ZhongMeiZhou/)
   end
 end
 
