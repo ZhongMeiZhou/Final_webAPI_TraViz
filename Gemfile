@@ -8,6 +8,9 @@ gem 'lonely_planet_tours'
 gem 'activerecord'
 gem 'sinatra-activerecord'
 gem 'tux'
+gem 'slim'
+gem 'sinatra-flash'
+gem 'httparty'
 
 group :test do
   gem 'minitest'
@@ -15,11 +18,11 @@ group :test do
   gem 'rack-test'
   gem 'vcr'
   gem 'webmock'
-  gem 'sqlite3'
 end
 
-group :development do
+group :development, :test do
   gem 'sqlite3'
+  gem 'hirb'
 end
 
 group :production do
