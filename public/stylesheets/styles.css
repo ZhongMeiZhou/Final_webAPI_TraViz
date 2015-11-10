@@ -35,8 +35,12 @@ a {
     padding-top: 30px;
     padding-bottom: 30px;
     margin-bottom: 30px;
-    color: white;
-    background-color: #63B8FF;
+    width:300px; /* custom sized div */
+    margin-left:auto; /* added to center custom sized div */
+    margin-right:auto; /* added to center custom sized div */
+    color: black;
+    background-color: #F8F8FF;
+    text-align: center;
 }
 
 .footer {
