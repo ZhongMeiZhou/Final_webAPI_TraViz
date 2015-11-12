@@ -11,6 +11,7 @@ gem 'tux'
 gem 'slim'
 gem 'sinatra-flash'
 gem 'httparty'
+gem 'hirb'
 
 group :test do
   gem 'minitest'
@@ -22,7 +23,6 @@ end
 
 group :development, :test do
   gem 'sqlite3'
-  gem 'hirb'
 end
 
 group :production do
