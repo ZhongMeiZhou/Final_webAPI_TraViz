@@ -14,11 +14,12 @@ a {
 }
 
 .navbar-brand {
-	float: right;
+	  float: right;
     height: 20px;
     padding: 10px 10px;
     font-size: 18px;
     line-height: 10px;
+    outline: none;
 }
 
 .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover {
@@ -35,12 +36,17 @@ a {
     padding-top: 30px;
     padding-bottom: 30px;
     margin-bottom: 30px;
-    width:300px; /* custom sized div */
-    margin-left:auto; /* added to center custom sized div */
-    margin-right:auto; /* added to center custom sized div */
+    width: 500px; /* custom sized div */
+    margin-left: auto; /* added to center custom sized div */
+    margin-right: auto; /* added to center custom sized div */
     color: black;
-    background-color: #F8F8FF;
+    background-color: #CAE1FF;
     text-align: center;
+}
+
+.form-control {
+  
+    
 }
 
 .footer {
@@ -51,4 +57,9 @@ a {
   height: 30px;
   background-color: #f5f5f5;
   outline:none;
+}
+
+div.flash {
+  text-align: center;
+  color: red;
 }

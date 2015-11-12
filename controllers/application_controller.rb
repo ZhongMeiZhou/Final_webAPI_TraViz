@@ -38,9 +38,10 @@ class ApplicationController < Sinatra::Base
     slim :home
   end
 
-  get_taiwan_tours = lambda do
-    content_type :json
-    get_tours('taiwan').to_json
+  get_tours = lambda do
+    #content_type :json
+    #get_tours('taiwan').to_json
+    slim :tours
   end
 
   get_country_tours = lambda do
@@ -113,7 +114,7 @@ class ApplicationController < Sinatra::Base
 
   # API Routes
   get '/', &get_root
-  get '/api/v1/taiwan_tours', &get_taiwan_tours
+  get '/api/v1/tours', &get_tours
   get '/api/v1/tours/:country.json', &get_country_tours
   get '/api/v1/tours/:id', &get_tour_id
   post '/api/v1/tours', &post_tours
