@@ -8,36 +8,20 @@ html
     link rel="stylesheet" media="screen" type="text/css" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
     
     / override bootstrap if necessary
-    link rel="stylesheet" media="screen" type="text/css" href="stylesheets/styles.css"
-    title ZmZ Tradventures
+    link rel="stylesheet" media="screen" type="text/css" href="/stylesheets/styles.css"
+    title ZmZ
      
   body 
-    nav class="navbar navbar-default navbar-fixed-top"
-     div class="container"
-      div class="navbar-header"
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-     a class='navbar-brand' href='#' title="ZmZ Tradventures"
-        img src="images/zmz.jpg"
-     
-     div id="navbar" class="navbar-collapse collapse"
-      ul class="nav navbar-nav"
-       <li><a href="#">Tour Search</a></li>
-       <li><a href="#">Recommended Tour of the Day</a></li>
-
+   header
+    == slim :nav
     div class="container"
      div class="jumbotron"
+       == styled_flash
        == yield
-
-    footer class="footer"
-     div class="container"
-      a href="https://github.com/ZhongMeiZhou/scraper_webAPI" target="_blank" See Github Project
+    .footer
+     == slim :footer  
     
-
+   
     script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"
     script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"
     script type="text/javascript" src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"
