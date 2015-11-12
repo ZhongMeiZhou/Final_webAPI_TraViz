@@ -1,23 +1,47 @@
 require 'sinatra/base'
+require 'sinatra/flash'
+require 'httparty'
+require 'hirb'
+require 'slim'
 require 'json'
 require './helpers/app_helper'
 require './models/tour'
 
 class ApplicationController < Sinatra::Base
+  helpers VisualizerAPIHelpers
+  enable :sessions
+  register Sinatra::Flash
+  use Rack::MethodOverride
+
+  set :views, File.expand_path('../../views', __FILE__)
+  set :public_folder, File.expand_path('../../public', __FILE__)
+
+  configure do
+    Hirb.enable
+    set :session_secret, 'zmz!'
+    set :api_ver, 'api/v1'
+  end
+
+  configure :development, :test do
+    set :api_server, 'http://localhost:9292'
+  end
+
+  configure :production do
+    set :api_server, 'http://zmztours.herokuapp.com'
+  end
 
   configure :production, :development do
     enable :logging
   end
 
-  helpers VisualizerAPIHelpers
-
   get_root = lambda do
-    "Version #{VERSION} is up and running. Find us on <a href='https://github.com/ZhongMeiZhou/scraper_webAPI' target='_blank'>Github.</a>"
+    slim :home
   end
 
-  get_taiwan_tours = lambda do
-    content_type :json
-    get_tours('taiwan').to_json
+  get_tours = lambda do
+    #content_type :json
+    #get_tours('taiwan').to_json
+    slim :tours
   end
 
   get_country_tours = lambda do
@@ -90,7 +114,7 @@ class ApplicationController < Sinatra::Base
 
   # API Routes
   get '/', &get_root
-  get '/api/v1/taiwan_tours', &get_taiwan_tours
+  get '/api/v1/tours', &get_tours
   get '/api/v1/tours/:country.json', &get_country_tours
   get '/api/v1/tours/:id', &get_tour_id
   post '/api/v1/tours', &post_tours

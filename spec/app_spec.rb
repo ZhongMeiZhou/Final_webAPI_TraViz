@@ -6,20 +6,21 @@ describe 'Check if service root is valid' do
   it 'should return ok' do
     get '/'
     last_response.must_be :ok?
-    last_response.body.must_match(/ZhongMeiZhou/)
+    #last_response.body.must_match(/ZhongMeiZhou/)
   end
 end
 
 describe 'Getting tour listings' do
   CONTENT_TYPE = 'application/json'
 
-  it 'should return taiwan tour list in json' do
-    VCR.use_cassette('taiwan_tours') do
-      get '/api/v1/taiwan_tours'
-    end
-    last_response.must_be :ok?
-    last_response.headers['Content-Type'].must_equal CONTENT_TYPE
-  end
+  # no need to to have a function only for taiwan, can pass taiwan as a parameter
+  #it 'should return taiwan tour list in json' do
+    #VCR.use_cassette('taiwan_tours') do
+      #get '/api/v1/taiwan_tours'
+    #end
+    #last_response.must_be :ok?
+    #last_response.headers['Content-Type'].must_equal CONTENT_TYPE
+  #end
 
   it 'should receive parameter and return a json' do
     VCR.use_cassette('honduras_tours') do
