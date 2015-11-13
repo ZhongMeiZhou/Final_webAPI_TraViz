@@ -118,4 +118,44 @@ class ApplicationController < Sinatra::Base
   get '/api/v1/tours/:country.json', &get_country_tours
   get '/api/v1/tours/:id', &get_tour_id
   post '/api/v1/tours', &post_tours
+
+  # Web app
+
+
+  get_tours_web = lambda do
+    slim :tours
+  end
+
+  post_tours_web = lambda do
+    # request_url = "#{api_server}/api/v1/tours"
+    request_url = "#{settings.api_server}/#{settings.api_ver}/tours"
+    country = params[:tour]
+    body = { country: country }
+    options = {
+      body: body.to_json,
+      headers: { 'Content_Type' => 'application/json'}
+    }
+
+    results = HTTParty.post(request_url, options)
+
+    if (results.code != 200)
+      flash[:notice] = 'The Pony Express did not deliver the goods.'
+      redirect '/tours'
+      return nil
+    end
+
+    id = results.request.last_uri.path.split('/').last
+    session[:results] = results.to_json
+    session[:action] = create
+    redirect "/api/v1/tours/#{id}" # <= new route by Bayardo
+  end
+
+  post_test = lambda do
+    request_url = "#{settings.api_server}/#{settings.api_ver}/cesar"
+  end
+
+  get '/tours', &get_tours_web
+  post '/tours', &post_tours_web
+
+
 end
