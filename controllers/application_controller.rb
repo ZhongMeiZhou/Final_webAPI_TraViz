@@ -23,7 +23,7 @@ class ApplicationController < Sinatra::Base
   end
 
   configure :development, :test do
-    set :api_server, 'http://localhost:9292'
+    set :api_server, 'http://localhost:3000'
   end
 
   configure :production do
