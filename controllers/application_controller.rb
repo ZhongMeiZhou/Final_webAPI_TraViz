@@ -146,7 +146,7 @@ class ApplicationController < Sinatra::Base
 
     id = results.request.last_uri.path.split('/').last
     session[:results] = results.to_json
-    session[:action] = create
+    session[:action] = :create
     redirect "/api/v1/tours/#{id}" # <= new route by Bayardo
   end
 
@@ -154,6 +154,7 @@ class ApplicationController < Sinatra::Base
     request_url = "#{settings.api_server}/#{settings.api_ver}/cesar"
   end
 
+# web routes
   get '/tours', &get_tours_web
   post '/tours', &post_tours_web
 
