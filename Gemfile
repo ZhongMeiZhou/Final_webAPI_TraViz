@@ -12,6 +12,7 @@ gem 'slim'
 gem 'sinatra-flash'
 gem 'httparty'
 gem 'hirb'
+gem 'puma'
 
 group :test do
   gem 'minitest'

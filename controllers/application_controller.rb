@@ -23,7 +23,7 @@ class ApplicationController < Sinatra::Base
   end
 
   configure :development, :test do
-    set :api_server, 'http://localhost:9292'
+    set :api_server, 'http://localhost:3000'
   end
 
   configure :production do
@@ -38,29 +38,31 @@ class ApplicationController < Sinatra::Base
     slim :home
   end
 
-  get_tours = lambda do
-    #content_type :json
-    #get_tours('taiwan').to_json
+  get_tour_search = lambda do
     slim :tours
   end
 
-  get_country_tours = lambda do
-    content_type :json
-    begin
-      get_tours(params[:country]).to_json
-    rescue StandardError => e
-      logger.info e.message
-      halt 400
-    end
+  get_tour_id = lambda do
+    # can format view here for viewing results
+      content_type :json
+      begin
+        tour = Tour.find(params[:id])
+        country = tour.country
+        tours = tour.tours
+        logger.info({ id: tour.id, country: country }.to_json)
+        { id: tour.id, country: country, tours: tours}.to_json
+      rescue
+        halt 400
+      end
+       #slim :tours
   end
 
-  # added routes
-  post_tours = lambda do
+  check_tours = lambda do
     content_type :json
     begin
       req = JSON.parse(request.body.read)
       logger.info req
-      country = req['country'].downcase
+      country = req['country'].strip.downcase
       scraped_list = get_tours(country).to_json
       only_tours = JSON.parse(scraped_list)['tours']
     rescue StandardError => e
@@ -74,7 +76,7 @@ class ApplicationController < Sinatra::Base
     #if country tour details has not changed then show existing DB results
     if check_if_exists && check_if_exists.country == country && check_if_exists.tours == only_tours
       id = check_if_exists.id
-      redirect "/api/v1/tours/#{id}", 303
+      redirect "/#{settings.api_ver}/tours/#{id}", 303
     else
       #if tours has changed just update the tour details
       if check_if_exists && check_if_exists.tours != only_tours && check_if_exists.country == country
@@ -82,7 +84,7 @@ class ApplicationController < Sinatra::Base
         tour.tours = only_tours
         if tour.save
           status 201
-          redirect "/api/v1/tours/#{tour.id}", 303
+          redirect "/#{settings.api_ver}/tours/#{tour.id}", 303
         else
           halt 500, "Error updating tour details"
         end
@@ -90,7 +92,7 @@ class ApplicationController < Sinatra::Base
         db_tour = Tour.new(country: country, tours: only_tours)
         if db_tour.save
           status 201
-          redirect "/api/v1/tours/#{db_tour.id}", 303
+          redirect "/#{settings.api_ver}/tours/#{db_tour.id}", 303
         else
           halt 500, "Error saving tours to the database"
         end
@@ -98,24 +100,51 @@ class ApplicationController < Sinatra::Base
     end
  end
 
+  post_tours = lambda do
+    request_url = "#{settings.api_server}/#{settings.api_ver}/tours"
+    country = params[:tour]
+    body = { country: country }
+    options = {
+      body: body.to_json,
+      headers: { 'Content_Type' => 'application/json'}
+    }
 
-  get_tour_id = lambda do
-      content_type :json
-      begin
-        tour = Tour.find(params[:id])
-        country = tour.country
-        tours = tour.tours
-        logger.info({ id: tour.id, country: country }.to_json)
-        { id: tour.id, country: country, tours: tours}.to_json
-      rescue
-        halt 400
-      end
+    results = HTTParty.post(request_url, options)
+
+    if (results.code != 200)
+      flash[:notice] = 'The Pony Express did not deliver the goods.'
+      redirect "/#{settings.api_ver}/tours"
+      return nil
     end
 
-  # API Routes
+    id = results.request.last_uri.path.split('/').last
+    session[:results] = results.to_json
+    session[:action] = :create
+    redirect "/#{settings.api_ver}/tours/#{id}" # <= new route by Bayardo
+  end
+
+  # not in use
+  get_country_tours = lambda do
+    content_type :json
+    begin
+      get_tours(params[:country]).to_json
+    rescue StandardError => e
+      logger.info e.message
+      halt 400
+    end
+  end
+
+  post_test = lambda do
+    request_url = "#{settings.api_server}/#{settings.api_ver}/cesar"
+  end
+
+
+  #===========================================================API Routes
   get '/', &get_root
-  get '/api/v1/tours', &get_tours
-  get '/api/v1/tours/:country.json', &get_country_tours
-  get '/api/v1/tours/:id', &get_tour_id
-  post '/api/v1/tours', &post_tours
+  get "/#{settings.api_ver}/tours", &get_tour_search
+  get "/#{settings.api_ver}/tours/:country.json", &get_country_tours
+  get "/#{settings.api_ver}/tours/:id", &get_tour_id
+  post "/#{settings.api_ver}/tours", &check_tours
+  post "/tours", &post_tours
+  
 end
