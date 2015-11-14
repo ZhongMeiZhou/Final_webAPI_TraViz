@@ -34,10 +34,12 @@ class ApplicationController < Sinatra::Base
     enable :logging
   end
 
+  # GUI: Root
   get_root = lambda do
     slim :home
   end
 
+  # GUI: Root
   get_tour_search = lambda do
     slim :tours
   end
@@ -139,12 +141,14 @@ class ApplicationController < Sinatra::Base
   end
 
 
-  #===========================================================API Routes
-  get '/', &get_root
-  get "/#{settings.api_ver}/tours", &get_tour_search
+  # API Routes
   get "/#{settings.api_ver}/tours/:country.json", &get_country_tours
   get "/#{settings.api_ver}/tours/:id", &get_tour_id
   post "/#{settings.api_ver}/tours", &check_tours
   post "/tours", &post_tours
+
+  # GUI Routes
+  get '/', &get_root
+  get "/tours", &get_tour_search
   
 end
