@@ -120,7 +120,7 @@ class ApplicationController < Sinatra::Base
     id = results.request.last_uri.path.split('/').last
     session[:results] = results.to_json
     session[:action] = :create
-    redirect "/#{settings.api_ver}/tours/#{id}" # <= new route by Bayardo
+    redirect "/tours/#{id}" # <= new route by Bayardo
   end
 
   # not in use
@@ -134,8 +134,30 @@ class ApplicationController < Sinatra::Base
     end
   end
 
-  post_test = lambda do
-    request_url = "#{settings.api_server}/#{settings.api_ver}/cesar"
+  get_tours = lambda do
+    if session[:action] == :create
+      @results = JSON.parse(session[:results])
+    else
+      request_url = "#{settings.api_server}/#{settings.api_ver}/tours/#{params[:id]}"
+      options = { headers: { 'Content-Type' => 'application/json'}}
+      begin
+        @results = HTTParty.get(request_url,options)
+      rescue StandardError => e
+        logger.info e.message
+        halt 400, e.message
+      end
+
+      if @results.code != 200
+        flash[:notice] = "Cannot find any tours for #{params[:country]}"
+        redirect "/#{settings.api_ver}/tours"
+      end
+    end
+    @id = params{:id}
+    @action = :update
+    @country = @results['country']
+    @tours = JSON.parse(@results['tours'])
+
+    slim :tours
   end
 
 
@@ -146,5 +168,6 @@ class ApplicationController < Sinatra::Base
   get "/#{settings.api_ver}/tours/:id", &get_tour_id
   post "/#{settings.api_ver}/tours", &check_tours
   post "/tours", &post_tours
-  
+  get '/tours/:id', &get_tours
+
 end
