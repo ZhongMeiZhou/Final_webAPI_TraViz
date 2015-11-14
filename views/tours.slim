@@ -6,3 +6,27 @@
 
   <button type="submit" class="btn btn-primary">Search Tours</button>
 </form>
+
+<form class="form-inline" action="/tours/#{@id}" method='post' id='delete-form'>
+    - if @action == :update
+      <input type='submit' name='_method' value='delete' class='delete'>
+      </form>
+- if @results
+  h1 Results
+  table class='center'
+    tbody
+      tr
+        th Country
+        th Tour Name
+        th Tour Price
+        tr
+          - @tours.each do | tour |
+            tr
+              td
+                = @country
+              td
+                = tour['title']
+              td
+                = tour['price']
+- else
+  p "Enter search criteria above"
