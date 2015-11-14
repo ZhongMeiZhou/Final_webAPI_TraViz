@@ -10,7 +10,7 @@ require 'capybara'
 
 include Rack::Test::Methods
 include WebMock::API
-stub_request( :any, /:3000\// ).to_rack( ApplicationController )
+#stub_request( :any, /:3000\// ).to_rack( ApplicationController )
 
 def app
   ApplicationController
