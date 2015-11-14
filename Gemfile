@@ -20,12 +20,13 @@ group :test do
   gem 'rack-test'
   gem 'vcr'
   gem 'webmock'
-  gem 'watir'
-  gem 'watir-webdriver', '~> 0.9.1'
+  gem 'capybara-webkit', '~> 1.7', '>= 1.7.1'
+  gem 'minitest-capybara'
 end
 
 group :development, :test do
   gem 'sqlite3'
+
 end
 
 group :production do

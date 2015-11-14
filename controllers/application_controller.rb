@@ -22,9 +22,10 @@ class ApplicationController < Sinatra::Base
     set :api_ver, 'api/v1'
   end
 
-  configure :development, :test do
+  configure :development,:test do
     set :api_server, 'http://localhost:3000'
   end
+
 
   configure :production do
     set :api_server, 'http://zmztours.herokuapp.com'
