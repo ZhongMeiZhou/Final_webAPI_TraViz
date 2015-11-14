@@ -1,0 +1,43 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://localhost:3000/api/v1/tours/1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json
+      X-Content-Type-Options:
+      - nosniff
+      Set-Cookie:
+      - rack.session=BAh7CEkiD3Nlc3Npb25faWQGOgZFVEkiRWVmOTZiZGQ2ODg4ODQzYWEzMjg3%0AYWNkMzMwYjc1N2YwZjBlMGFjNjY3OTc1ZmI2N2RjN2VjMDUxMDcwMjZjZmUG%0AOwBGSSIJY3NyZgY7AEZJIiVjMDhlOGI2ZDA3YTA3NTcyMDE5NjkyNzg3NzRj%0AZmY5ZgY7AEZJIg10cmFja2luZwY7AEZ7B0kiFEhUVFBfVVNFUl9BR0VOVAY7%0AAFRJIi1kYTM5YTNlZTVlNmI0YjBkMzI1NWJmZWY5NTYwMTg5MGFmZDgwNzA5%0ABjsARkkiGUhUVFBfQUNDRVBUX0xBTkdVQUdFBjsAVEkiLWRhMzlhM2VlNWU2%0AYjRiMGQzMjU1YmZlZjk1NjAxODkwYWZkODA3MDkGOwBG%0A--e9fb2a5e04b770dcac0efd086ba2bcae6450388d;
+        path=/; HttpOnly
+      Content-Length:
+      - '1133'
+    body:
+      encoding: UTF-8
+      string: '{"id":1,"country":"taiwan","tours":"[{\"title\":\"5-Day Best of Taiwan
+        Tour from Taipei: Sun Moon Lake, Taroko Gorge, Kaohsiung and Taitung\",\"price\":\"$582\"},{\"title\":\"2-Day
+        Kenting National Park and Kaohsiung City Tour with High-Speed Train Experience\",\"price\":\"$362\"},{\"title\":\"Private
+        5-Day Best of Taiwan Tour from Taipei: Sun Moon Lake, Taroko Gorge, Kaohsiung
+        and Taitung\",\"price\":\"$1099\"},{\"title\":\"3-Day Atayal Culture Tour
+        of Wufeng and Jianshi Township From Taipei\",\"price\":\"$1819\"},{\"title\":\"7-Day
+        Southern and Eastern Coast of Taiwan Tour\",\"price\":\"$5000\"},{\"title\":\"2-Day
+        Private Taroko Gorge Trip from Taipei\",\"price\":\"$340\"},{\"title\":\"Experience
+        Beijing Opera: Private Makeup Session and Show at TaipeiEYE\",\"price\":\"$177\"},{\"title\":\"2-Day
+        Private Yilan Trip from Taipei\",\"price\":\"$233\"},{\"title\":\"3-Day East
+        Coast and Hualien Tour from Taipei\",\"price\":\"$395\"},{\"title\":\"3-Day
+        Taroko Gorge Adventure from Taipei: Hiking, Night Market and Shrimp Fishing\",\"price\":\"$395\"},{\"title\":\"Taiwan
+        5-Day Cycling Escapade Tour\",\"price\":\"$2990\"}]"}'
+    http_version: 
+  recorded_at: Sat, 14 Nov 2015 21:23:26 GMT
+recorded_with: VCR 3.0.0
