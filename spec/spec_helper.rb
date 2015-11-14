@@ -10,6 +10,7 @@ require 'capybara'
 
 include Rack::Test::Methods
 include WebMock::API
+stub_request( :any, /:3000\// ).to_rack( ApplicationController )
 
 def app
   ApplicationController
@@ -21,5 +22,5 @@ VCR.configure do |config|
 end
 
 Capybara.app = app
-stub_request(:any, /.*localhost:3000.*/)
+
 
