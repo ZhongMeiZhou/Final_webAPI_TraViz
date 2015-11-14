@@ -20,16 +20,12 @@ class ViewTest < AcceptanceSpec
 	  	VCR.use_cassette('view_post_tours') do
 	   		find("#btn_search").click
 	   		page.current_path.must_match '/tours/1'
-	  		assert_includes(page.body.to_s, 'Results')
 	  	end	
   	end
 
-  	it 'should show tour results' do
-	  	
+  	it 'should show more than one results' do
 	   	VCR.use_cassette('view_taiwan_tours') do
 	   		visit '/tours/1'
-	   		find("#btn_search").click
-	   		page.current_path.must_match '/tours/1'
 	  		assert_includes(page.body.to_s, 'Results')
 	  	end	
   	end
