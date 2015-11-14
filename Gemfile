@@ -20,6 +20,8 @@ group :test do
   gem 'rack-test'
   gem 'vcr'
   gem 'webmock'
+  gem 'watir'
+  gem 'watir-webdriver', '~> 0.9.1'
 end
 
 group :development, :test do

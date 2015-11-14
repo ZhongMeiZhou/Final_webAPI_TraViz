@@ -145,10 +145,10 @@ class ApplicationController < Sinatra::Base
   get "/#{settings.api_ver}/tours/:country.json", &get_country_tours
   get "/#{settings.api_ver}/tours/:id", &get_tour_id
   post "/#{settings.api_ver}/tours", &check_tours
-  post "/tours", &post_tours
 
   # GUI Routes
   get '/', &get_root
   get "/tours", &get_tour_search
+  post "/tours", &post_tours
   
 end
