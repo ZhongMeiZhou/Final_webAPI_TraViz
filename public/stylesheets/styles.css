@@ -44,19 +44,27 @@ a {
     text-align: center;
 }
 
+.table > thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #DDD;
+    text-align: center;
+    font-weight: bold;
+}
+
 .form-control {
   
     
 }
 
 .footer {
-  position: absolute;
+  /*position: absolute;*/
   bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
-  height: 30px;
-  background-color: #f5f5f5;
+  height: 20px;
+  /* background-color: #f5f5f5;*/
   outline:none;
+  text-align: center;
 }
 
 div.flash {
