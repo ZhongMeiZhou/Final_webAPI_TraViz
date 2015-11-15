@@ -1,32 +1,28 @@
 .container
 <form class="form-inline" action="/tours" method='post'>
   <div class="form-group">
-    <input type="text" class="form-control" id="tour" name="tour" placeholder="Where do you want to go?">
+    <input type="text" class="form-control" id="tour" name="tour" placeholder="Where do you want to go?" value = #{@country}>
   </div>
-
   <button type="submit" id="btn_search" class="btn btn-primary">Search Tours</button>
 </form>
 
-<form class="form-inline" action="/tours/#{@id}" method='post' id='delete-form'>
-    - if @action == :update
-      <input type='submit' name='_method' value='delete' class='delete'>
-      </form>
+/ <form class="form-inline" action="/tours/#{@id}" method='post' id='delete-form'>
+  /   - if @action == :update
+   /    <input type='submit' name='_method' value='delete' class='delete'>
+   /    </form>
+
 - if @results
-  h1 Results
-  table class='center'
+  h5
+  table class='table table-condensed table-striped'
+   thead
+    tr
+     th Tours
+     th Price(USD)
     tbody
-      tr
-        th Country
-        th Tour Name
-        th Tour Price
-        tr
           - @tours.each do | tour |
             tr
-              td
-                = @country
               td
                 = tour['title']
               td
                 = tour['price']
-- else
-  p "Enter search criteria above"
+

@@ -26,7 +26,6 @@ class ApplicationController < Sinatra::Base
     set :api_server, 'http://localhost:3000'
   end
 
-
   configure :production do
     set :api_server, 'http://zmztours.herokuapp.com'
   end
@@ -40,13 +39,11 @@ class ApplicationController < Sinatra::Base
     slim :home
   end
 
-  # GUI: Root
   get_tour_search = lambda do
     slim :tours
   end
 
   get_tour_id = lambda do
-    # can format view here for viewing results
       content_type :json
       begin
         tour = Tour.find(params[:id])
@@ -57,7 +54,6 @@ class ApplicationController < Sinatra::Base
       rescue
         halt 400
       end
-       #slim :tours
   end
 
   check_tours = lambda do
@@ -116,7 +112,7 @@ class ApplicationController < Sinatra::Base
 
     if (results.code != 200)
       flash[:notice] = 'The Pony Express did not deliver the goods.'
-      redirect "/#{settings.api_ver}/tours"
+      redirect "/tours"
       return nil
     end
 
@@ -124,17 +120,6 @@ class ApplicationController < Sinatra::Base
     session[:results] = results.to_json
     session[:action] = :create
     redirect "/tours/#{id}" # <= new route by Bayardo
-  end
-
-  # not in use
-  get_country_tours = lambda do
-    content_type :json
-    begin
-      get_tours(params[:country]).to_json
-    rescue StandardError => e
-      logger.info e.message
-      halt 400
-    end
   end
 
   get_tours = lambda do
@@ -157,10 +142,21 @@ class ApplicationController < Sinatra::Base
     end
     @id = params{:id}
     @action = :update
-    @country = @results['country']
+    @country = @results['country'].upcase
     @tours = JSON.parse(@results['tours'])
 
     slim :tours
+  end
+
+   # not in use
+  get_country_tours = lambda do
+    content_type :json
+    begin
+      get_tours(params[:country]).to_json
+    rescue StandardError => e
+      logger.info e.message
+      halt 400
+    end
   end
 
 

@@ -2,8 +2,6 @@ require_relative 'spec_helper'
 require 'json'
 require "minitest-capybara"
 
-
-
 class AcceptanceSpec < Minitest::Spec
   include Capybara::DSL
   include Capybara::Assertions
@@ -12,7 +10,6 @@ end
 class ViewTest < AcceptanceSpec
 
   describe 'Search Tours View',:type => :feature do
-
 
   	it 'should return to link /api/v[:current_version]/tours/:id' do
 	  	visit '/tours'
@@ -26,7 +23,7 @@ class ViewTest < AcceptanceSpec
   	it 'should show more than one results' do
 	   	VCR.use_cassette('view_taiwan_tours') do
 	   		visit '/tours/1'
-	  		assert_includes(page.body.to_s, 'Results')
+	  		assert_includes(page.body.to_s, 'Tours')
 	  	end	
   	end
 
