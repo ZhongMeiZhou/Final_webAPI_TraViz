@@ -142,7 +142,7 @@ class ApplicationController < Sinatra::Base
     end
     @id = params{:id}
     @action = :update
-    @country = @results['country']
+    @country = @results['country'].upcase
     @tours = JSON.parse(@results['tours'])
 
     slim :tours
