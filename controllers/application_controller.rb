@@ -22,9 +22,10 @@ class ApplicationController < Sinatra::Base
     set :api_ver, 'api/v1'
   end
 
-  configure :development, :test do
+  configure :development,:test do
     set :api_server, 'http://localhost:3000'
   end
+
 
   configure :production do
     set :api_server, 'http://zmztours.herokuapp.com'
@@ -34,10 +35,12 @@ class ApplicationController < Sinatra::Base
     enable :logging
   end
 
+  # GUI: Root
   get_root = lambda do
     slim :home
   end
 
+  # GUI: Root
   get_tour_search = lambda do
     slim :tours
   end
@@ -161,12 +164,14 @@ class ApplicationController < Sinatra::Base
   end
 
 
-  #===========================================================API Routes
-  get '/', &get_root
-  get "/#{settings.api_ver}/tours", &get_tour_search
+  # API Routes
   get "/#{settings.api_ver}/tours/:country.json", &get_country_tours
   get "/#{settings.api_ver}/tours/:id", &get_tour_id
   post "/#{settings.api_ver}/tours", &check_tours
+
+  # GUI Routes
+  get '/', &get_root
+  get "/tours", &get_tour_search
   post "/tours", &post_tours
   get '/tours/:id', &get_tours
 
