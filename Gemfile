@@ -13,6 +13,8 @@ gem 'sinatra-flash'
 gem 'httparty'
 gem 'hirb'
 gem 'puma'
+gem 'virtus'
+gem 'activemodel'
 
 group :test do
   gem 'minitest'
