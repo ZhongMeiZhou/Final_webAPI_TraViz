@@ -6,7 +6,7 @@ require 'slim'
 require 'json'
 require './helpers/app_helper'
 require './models/tour'
-require './forms/country_form'
+require './forms/tour_form'
 
 class ApplicationController < Sinatra::Base
   helpers VisualizerAPIHelpers
@@ -34,6 +34,7 @@ class ApplicationController < Sinatra::Base
   configure :production, :development do
     enable :logging
   end
+
   # API
   # API Lambdas
   get_country_tours = lambda do
@@ -118,10 +119,17 @@ class ApplicationController < Sinatra::Base
   post_tours = lambda do
     request_url = "#{settings.api_server}/#{settings.api_ver}/tours"
 
-    #country = params[:tour]
-    #body = { country: country }
+    # country = params[:tour]
+    # body = { country: country }
 
-    submit = TourForm.new({country: params[:tour], country_two: '', tour_category: '' })
+    submit = TourForm.new
+    submit.country = params[:tour]
+
+    if submit.valid? == false
+      flash[:notice] = 'You broke it!'
+      redirect "/tours"
+    end
+
     options = {
       body: submit.to_json,
       headers: { 'Content_Type' => 'application/json'}

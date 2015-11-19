@@ -8,22 +8,21 @@ class TourString < Virtus::Attribute
   end
 end
 
-class TourForm
+class TourCompareForm
   include Virtus.model
   include ActiveModel::Validations
+  include ActiveModel::Serializers::JSON
 
   attribute :country, TourString
   attribute :country_two, TourString
   attribute :tour_category, TourString
 
   validates :country, presence: true
+  validates :country_two, presence: true
+  validates :tour_category, presence: true
 
   def error_fields
     errors.messages.keys.map(&:to_s).join(', ')
-  end
-
-  def to_json
-    { country: country, country_two: country_two, tour_category: tour_category }.to_json
   end
 
 end
