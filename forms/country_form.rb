@@ -1,23 +1,29 @@
 require 'virtus'
 require 'active_model'
+require 'json'
+
+class TourString < Virtus::Attribute
+  def coerce(value)
+    value.downcase
+  end
+end
 
 class TourForm
+  include Virtus.model
+  include ActiveModel::Validations
 
-include Virtus.model
-include ActiveModel::Validations
+  attribute :country, TourString
+  attribute :country_two, TourString
+  attribute :tour_category, TourString
 
-attribute :country, String
-attribute :country_two, String
-attribute :tour_category, String
+  validates :country, presence: true
 
-validates :country_one, presence: true
+  def error_fields
+    errors.messages.keys.map(&:to_s).join(', ')
+  end
 
-def error_fields
-  errors.messages.keys.map(&:to_s).join(', ')
-end
-
-def to_json
-  { country: :country, country_two: :country_two, tour_category: :tour_category }.to_json
-end
+  def to_json
+    { country: country, country_two: country_two, tour_category: tour_category }.to_json
+  end
 
 end
