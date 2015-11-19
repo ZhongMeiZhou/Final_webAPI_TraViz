@@ -33,27 +33,29 @@ class ApplicationController < Sinatra::Base
   configure :production, :development do
     enable :logging
   end
-
-  # GUI: Root
-  get_root = lambda do
-    slim :home
-  end
-
-  get_tour_search = lambda do
-    slim :tours
+  # API
+  # API Lambdas
+  get_country_tours = lambda do
+    content_type :json
+    begin
+      get_tours(params[:country]).to_json
+    rescue StandardError => e
+      logger.info e.message
+      halt 400
+    end
   end
 
   get_tour_id = lambda do
-      content_type :json
-      begin
-        tour = Tour.find(params[:id])
-        country = tour.country
-        tours = tour.tours
-        logger.info({ id: tour.id, country: country }.to_json)
-        { id: tour.id, country: country, tours: tours}.to_json
-      rescue
-        halt 400
-      end
+    content_type :json
+    begin
+      tour = Tour.find(params[:id])
+      country = tour.country
+      tours = tour.tours
+      logger.info({ id: tour.id, country: country }.to_json)
+      { id: tour.id, country: country, tours: tours}.to_json
+    rescue
+      halt 400
+    end
   end
 
   check_tours = lambda do
@@ -69,7 +71,6 @@ class ApplicationController < Sinatra::Base
       halt 400
     end
 
-    #Tour.where(["country = ?", country]).delete_all
     check_if_exists = Tour.where(["country = ?", country]).first
 
     #if country tour details has not changed then show existing DB results
@@ -97,7 +98,21 @@ class ApplicationController < Sinatra::Base
         end
       end
     end
- end
+  end
+
+  # API Routes
+  get "/#{settings.api_ver}/tours/:country.json", &get_country_tours
+  get "/#{settings.api_ver}/tours/:id", &get_tour_id
+  post "/#{settings.api_ver}/tours", &check_tours
+
+  # GUI Lambdas
+  get_root = lambda do
+    slim :home
+  end
+
+  get_tour_search = lambda do
+    slim :tours
+  end
 
   post_tours = lambda do
     request_url = "#{settings.api_server}/#{settings.api_ver}/tours"
@@ -147,23 +162,6 @@ class ApplicationController < Sinatra::Base
 
     slim :tours
   end
-
-   # not in use
-  get_country_tours = lambda do
-    content_type :json
-    begin
-      get_tours(params[:country]).to_json
-    rescue StandardError => e
-      logger.info e.message
-      halt 400
-    end
-  end
-
-
-  # API Routes
-  get "/#{settings.api_ver}/tours/:country.json", &get_country_tours
-  get "/#{settings.api_ver}/tours/:id", &get_tour_id
-  post "/#{settings.api_ver}/tours", &check_tours
 
   # GUI Routes
   get '/', &get_root

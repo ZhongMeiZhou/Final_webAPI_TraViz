@@ -14,6 +14,7 @@ gem 'httparty'
 gem 'hirb'
 gem 'puma'
 gem 'virtus'
+gem 'active_model'
 
 group :test do
   gem 'minitest'
