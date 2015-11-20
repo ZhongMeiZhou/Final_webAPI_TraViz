@@ -24,10 +24,8 @@ class TourListings
  end
 end
 
-
-
-
-
+#Sample usage
+=begin
 tour = TourListings.new(
   :id     => 1,
   :country     => 'Belize',
@@ -37,6 +35,6 @@ tour = TourListings.new(
   )
 tour.code = 100
 puts tour.to_json
-#tour.tours.each do |t|
-#puts t['title']
-#end
+tour.tours.each do |t|
+puts t['title']
+=end
