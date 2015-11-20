@@ -13,6 +13,7 @@ gem 'sinatra-flash'
 gem 'httparty'
 gem 'hirb'
 gem 'puma'
+gem 'virtus'
 
 group :test do
   gem 'minitest'
@@ -20,8 +21,8 @@ group :test do
   gem 'rack-test'
   gem 'vcr'
   gem 'webmock'
-  gem 'capybara-webkit', '~> 1.7', '>= 1.7.1'
-  gem 'minitest-capybara'
+  #gem 'capybara-webkit', '~> 1.7', '>= 1.7.1'
+  #gem 'minitest-capybara'
 end
 
 group :development, :test do
