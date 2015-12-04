@@ -62,6 +62,7 @@ class ApplicationController < Sinatra::Base
 
   check_tours = lambda do
     content_type :json
+
     begin
       req = JSON.parse(request.body.read)
       logger.info req
@@ -100,12 +101,27 @@ class ApplicationController < Sinatra::Base
         end
       end
     end
+
+  end
+
+  tour_compare = lambda do
+    content_type :json
+
+    req = JSON.parse(request.body.read)
+    logger.info req
+    tour_countries = req['tour_countries']
+    tour_categories = req['tour_categories']
+    tour_price_range_min = req['tour_price_min']
+    tour_price_range_max =req['tour_price_max']
+
+    "Please search for tours of type #{tour_categories} in the following countries #{tour_countries} between $#{tour_price_min} and $#{tour_price_max}. Thanks!"
   end
 
   # API Routes
   get "/#{settings.api_ver}/tours/:country.json", &get_country_tours
   get "/#{settings.api_ver}/tours/:id", &get_tour_id
   post "/#{settings.api_ver}/tours", &check_tours
+  post "/#{settings.api_ver}/tour_compare", &tour_compare
 
   # GUI Lambdas
   get_root = lambda do
