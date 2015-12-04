@@ -10,11 +10,14 @@ describe 'Check method used by webapp' do
       tour_price_min: 25,
       tour_price_max: 675,
     }
+    VCR.use_cassette('webappmethods') do
+      post '/api/v1/tour_compare', body.to_json, header
+    end
+  
 
-    post '/api/v1/tour_compare', body.to_json, header
+    #last_response.body.must_be_kind_of String
+    #last_response.body.must_match(/Please search for tours of type/)
 
-    last_response.body.must_be_kind_of String
-    last_response.body.must_match(/Please search for tours of type/)
     last_response.must_be :ok?
   end
 

@@ -114,7 +114,23 @@ class ApplicationController < Sinatra::Base
     tour_price_min = req['tour_price_min']
     tour_price_max = req['tour_price_max']
 
-    "Please search for tours of type #{tour_categories} in the following countries #{tour_countries} between $#{tour_price_min} and $#{tour_price_max}. Thanks!"
+    # "Please search for tours of type #{tour_categories} in the following countries #{tour_countries} between $#{tour_price_min} and $#{tour_price_max}. Thanks!"
+
+    country_arr = tour_countries.split(', ')
+
+    country_arr.each do |country|
+      check_if_exists = Tour.where(["country = ?", country]).count
+
+      if check_if_exists == 0 # if country not yet exists in the DB, save it
+          country_search = get_tours(country).to_json
+          country_tour_list = JSON.parse(country_search)['tours']
+          new_tour = Tour.new(country: country, tours: country_tour_list)
+          halt 500, "Error saving tours to the database" unless new_tour.save
+      end
+
+    
+    end
+
   end
 
   # API Routes
