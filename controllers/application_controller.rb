@@ -111,8 +111,8 @@ class ApplicationController < Sinatra::Base
     logger.info req
     tour_countries = req['tour_countries']
     tour_categories = req['tour_categories']
-    tour_price_range_min = req['tour_price_min']
-    tour_price_range_max =req['tour_price_max']
+    tour_price_min = req['tour_price_min']
+    tour_price_max = req['tour_price_max']
 
     "Please search for tours of type #{tour_categories} in the following countries #{tour_countries} between $#{tour_price_min} and $#{tour_price_max}. Thanks!"
   end

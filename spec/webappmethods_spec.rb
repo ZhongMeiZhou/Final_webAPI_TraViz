@@ -8,12 +8,14 @@ describe 'Check method used by webapp' do
       tour_countries: 'Honduras, Nicaragua, Belize',
       tour_categories: 'Outdoors, Mayan, Colonial, Extreme',
       tour_price_min: 25,
-      tour_price_min: 675,
+      tour_price_max: 675,
     }
 
-    last_response = post '/api/v1/tour_compare', body.to_json, header
-    last_response.body.must_be_kind_of String
-    last_response.must_be :ok?
+    post '/api/v1/tour_compare', body.to_json, header
 
+    last_response.body.must_be_kind_of String
+    last_response.body.must_match(/Please search for tours of type/)
+    last_response.must_be :ok?
   end
+
 end
