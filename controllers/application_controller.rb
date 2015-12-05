@@ -135,7 +135,7 @@ class ApplicationController < Sinatra::Base
       end
 
       # remove tours if not in search category
-      tour_data.keep_if { |tour| tour_categories.include?(tour['category']) }
+      tour_data.keep_if { |tour| tour_categories.include?(tour['category']) } unless tour_categories.empty?
 
       [country, tour_data.size, tour_data]
     end
