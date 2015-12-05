@@ -6,13 +6,7 @@
   <button type="submit" id="btn_search" class="btn btn-primary">Search Tours</button>
 </form>
 
-/ <form class="form-inline" action="/tours/#{@id}" method='post' id='delete-form'>
-  /   - if @action == :update
-   /    <input type='submit' name='_method' value='delete' class='delete'>
-   /    </form>
-
 - if @results
-  h5
   table class='table table-condensed table-striped'
    thead
     tr
