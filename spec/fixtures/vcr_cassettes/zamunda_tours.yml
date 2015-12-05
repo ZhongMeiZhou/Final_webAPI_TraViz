@@ -1,0 +1,78 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://www.lonelyplanet.com/zamunda/tours.json
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Access-Control-Allow-Methods:
+      - GET
+      Cache-Control:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
+      Server:
+      - Powered by Sloths
+      Set-Cookie:
+      - _v=_split-12-canary;Path=/
+      - localeCookie=en_TW; Domain=lonelyplanet.com; Path=/
+      - lpCurrency=USD; Domain=lonelyplanet.com; Path=/
+      - lpUid=laim_lMYP1M5uhhJkuxScqY_i0zbpq7Q; expires=Sun, 04 Dec 2016 08:06:49
+        GMT; Domain=lonelyplanet.com; Path=/
+      Status:
+      - 404 Not Found
+      X-Frame-Options:
+      - ALLOW-FROM http://www.stumbleupon.com
+      X-Intercept-Error:
+      - 'true'
+      X-Request-Id:
+      - cbdaabe5-210e-45b1-9428-843de77b27d9
+      X-Runtime:
+      - '0.230765'
+      Content-Length:
+      - '21'
+      Accept-Ranges:
+      - bytes
+      Date:
+      - Sat, 05 Dec 2015 08:06:49 GMT
+      Via:
+      - 1.1 varnish
+      Connection:
+      - keep-alive
+      X-Served-By:
+      - cache-hkg6826-HKG
+      X-Cache:
+      - MISS
+      X-Cache-Hits:
+      - '0'
+      X-Timer:
+      - S1449302808.723305,VS0,VE1137
+      Vary:
+      - Fastly-SSL
+      X-Geoip-Countrycode:
+      - TW
+      X-Geoip-Countryname:
+      - Taiwan
+      X-Geoip-Longitude:
+      - '121.000'
+      X-Geoip-Latitude:
+      - '23.500'
+    body:
+      encoding: ASCII-8BIT
+      string: " "
+    http_version: 
+  recorded_at: Sat, 05 Dec 2015 08:06:50 GMT
+recorded_with: VCR 3.0.0

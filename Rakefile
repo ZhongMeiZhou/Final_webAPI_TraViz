@@ -8,6 +8,6 @@ task :default => :spec
 
 desc 'Run all tests'
 Rake::TestTask.new(name = :spec) do |t|
-  # t.pattern = 'spec/*_spec.rb'
-   t.pattern = 'spec/webappmethods_spec.rb'
+   t.pattern = 'spec/*_spec.rb'
+   #t.pattern = 'spec/webappmethods_spec.rb'
 end

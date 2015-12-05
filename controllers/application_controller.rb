@@ -111,8 +111,10 @@ class ApplicationController < Sinatra::Base
     logger.info req
     country_arr = req['tour_countries'].split(', ')
     tour_categories = req['tour_categories'].split(', ')
-    tour_price_min = req['tour_price_min']
-    tour_price_max = req['tour_price_max']
+    req['tour_price_min'].empty? ? tour_price_min = 0 : tour_price_min = req['tour_price_min'].to_i
+    req['tour_price_max'].empty? ? tour_price_max = 99999 : tour_price_max = req['tour_price_max'].to_i
+
+    #tour_price_max = req['tour_price_max'].to_i
 
     search_results = country_arr.map do |country|
       check_if_exists = Tour.where(["country = ?", country]).count
@@ -134,7 +136,7 @@ class ApplicationController < Sinatra::Base
         tour_price < tour_price_min || tour_price > tour_price_max
       end
 
-      # remove tours if not in search category
+      # keep tours with specified categories
       tour_data.keep_if { |tour| tour_categories.include?(tour['category']) } unless tour_categories.empty?
 
       [country, tour_data.size, tour_data]
