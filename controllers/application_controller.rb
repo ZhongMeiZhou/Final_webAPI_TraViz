@@ -109,38 +109,38 @@ class ApplicationController < Sinatra::Base
 
     req = JSON.parse(request.body.read)
     logger.info req
-    tour_countries = req['tour_countries']
-    tour_categories = req['tour_categories']
+    country_arr = req['tour_countries'].split(', ')
+    tour_categories = req['tour_categories'].split(', ')
     tour_price_min = req['tour_price_min']
     tour_price_max = req['tour_price_max']
 
-    # "Please search for tours of type #{tour_categories} in the following countries #{tour_countries} between $#{tour_price_min} and $#{tour_price_max}. Thanks!"
-
-    country_arr = tour_countries.split(', ')
-
-    results = []
-
-    country_arr.each do |country|
+    search_results = country_arr.map do |country|
       check_if_exists = Tour.where(["country = ?", country]).count
 
-      if check_if_exists == 0 # if country not yet exists in the DB, save it
+      # if country not yet exists in the DB, save it
+      if check_if_exists == 0
           country_search = get_tours(country).to_json
           country_tour_list = JSON.parse(country_search)['tours']
           new_tour = Tour.new(country: country, tours: country_tour_list)
           halt 500, "Error saving tours to the database" unless new_tour.save
       end
 
+      # get country tour array
       tour_data = JSON.parse(Tour.find_by_country(country).tours)
 
-      tour_data.each do |tour|
+      # remove tours out of the price range
+      tour_data.delete_if do |tour|
         tour_price = tour['price'].gsub('$','').to_i
-        if tour_price < tour_price_min || tour_price > tour_price_max
-          tour_data.delete(tour)
-        end
-        
+        tour_price < tour_price_min || tour_price > tour_price_max
       end
 
+      # remove tours if not in search category
+      tour_data.keep_if { |tour| tour_categories.include?(tour['category']) }
+
+      [country, tour_data.size, tour_data]
     end
+
+    search_results.to_json
 
   end
 
