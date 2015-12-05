@@ -1,7 +1,8 @@
 require_relative 'spec_helper'
 require 'json'
 
-describe 'Check method used by webapp' do
+describe 'Check complex search method' do
+
   it 'should return tour data with filters' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = {
@@ -13,10 +14,6 @@ describe 'Check method used by webapp' do
     VCR.use_cassette('webappmethods') do
       post '/api/v1/tour_compare', body.to_json, header
     end
-
-
-    #last_response.body.must_be_kind_of String
-    #last_response.body.must_match(/Please search for tours of type/)
 
     last_response.must_be :ok?
     search_results = JSON.parse(last_response.body)
