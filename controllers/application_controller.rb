@@ -118,6 +118,8 @@ class ApplicationController < Sinatra::Base
 
     country_arr = tour_countries.split(', ')
 
+    results = []
+
     country_arr.each do |country|
       check_if_exists = Tour.where(["country = ?", country]).count
 
@@ -128,7 +130,16 @@ class ApplicationController < Sinatra::Base
           halt 500, "Error saving tours to the database" unless new_tour.save
       end
 
-    
+      tour_data = JSON.parse(Tour.find_by_country(country).tours)
+
+      tour_data.each do |tour|
+        tour_price = tour['price'].gsub('$','').to_i
+        if tour_price < tour_price_min || tour_price > tour_price_max
+          tour_data.delete(tour)
+        end
+        
+      end
+
     end
 
   end
