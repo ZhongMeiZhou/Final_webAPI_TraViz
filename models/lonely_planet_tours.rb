@@ -2,14 +2,22 @@ require 'lonely_planet_tours'
 require 'json'
 
 class TourList
-  def []=(title, price)
+
+  def []= (title, trip)
     @tours ||= {}
-    @tours[title] = price
+    ##@tours['img'] = trip['img']
+    @tours[title] = trip
+    ##@tours['content'] = trip['content']
+    ##@tours['price_currency'] = trip['price_currency']
+    ##@tours['price'] = trip['price']
+    ##@tours['category'] = trip['category']
   end
 
   def to_json
-    @tours.map do |title, price|
-      { 'title' => title, 'price' => '$' + price }
+    @tours.map do |title, trip|
+      { 'title' => title, 'price' => '$' + trip['price'], 'img' => trip['img'],
+        'content' => trip['content'], 'price_currency' => trip['price_currency'],
+        'category' => trip['category']}
     end.to_json
   end
 end
@@ -32,7 +40,7 @@ class Tours
     tour = TourList.new
     country = LonelyPlanetScrape::LonelyPlanetTours.new(@country)
     JSON.parse(country.tours).each do |trip|
-      tour[trip['title']] = trip['price']
+      tour[trip['title']] = trip
     end
     tour.to_json
   end
