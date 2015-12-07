@@ -67,7 +67,7 @@ class ApplicationController < Sinatra::Base
       logger.info req
       country = req['country'].strip.downcase
       scraped_list = get_tours(country).to_json
-      only_tours = JSON.parse(scraped_list)['tours']
+      only_tours = JSON.parse(scraped_list)['tours'] # need to revise to send id aswell
     rescue StandardError => e
       logger.info e.message
       halt 400

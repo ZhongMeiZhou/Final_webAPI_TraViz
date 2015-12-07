@@ -2,8 +2,8 @@
 
 ## Endpoint
   
-  ```sh
- http://zmztours.herokuapp.com/
+ ```sh
+ [http://zmztours.herokuapp.com/] (http://zmztours.herokuapp.com/)
  ```
 
 
