@@ -2,9 +2,7 @@
 
 ## Endpoint
   
- ```sh
  [http://zmztours.herokuapp.com/] (http://zmztours.herokuapp.com/)
- ```
 
 
 ## Description
