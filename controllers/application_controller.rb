@@ -35,7 +35,11 @@ class ApplicationController < Sinatra::Base
     enable :logging
   end
 
-  # API
+
+  get_root = lambda do
+    "ZMZ Traviz API Service"
+  end
+
   # API Lambdas
   get_country_tours = lambda do
     content_type :json
@@ -143,16 +147,20 @@ class ApplicationController < Sinatra::Base
     end
 
     search_results.to_json
-
   end
 
   # API Routes
+  get '/', &get_root
   get "/#{settings.api_ver}/tours/:country.json", &get_country_tours
   get "/#{settings.api_ver}/tours/:id", &get_tour_id
   post "/#{settings.api_ver}/tours", &check_tours
   post "/#{settings.api_ver}/tour_compare", &tour_compare
+end
 
-  # GUI Lambdas
+
+=begin
+  #GUI functionality removed
+
   get_root = lambda do
     slim :home
   end
@@ -225,5 +233,5 @@ class ApplicationController < Sinatra::Base
   get "/tours", &get_tour_search
   post "/tours", &post_tours
   get '/tours/:id', &get_tours
+=end
 
-end
