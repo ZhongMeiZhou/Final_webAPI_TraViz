@@ -9,7 +9,7 @@ require './models/tour'
 require './forms/tour_form'
 
 class ApplicationController < Sinatra::Base
-  helpers VisualizerAPIHelpers
+  helpers LP_APIHelpers
   enable :sessions
   register Sinatra::Flash
   use Rack::MethodOverride
@@ -72,40 +72,39 @@ class ApplicationController < Sinatra::Base
       logger.info req
       country = req['country'].strip.downcase
       scraped_list = get_tours(country).to_json
-      only_tours = JSON.parse(scraped_list)['tours'] # need to revise to send id aswell
+      only_tours = JSON.parse(scraped_list)['tours']
     rescue StandardError => e
       logger.info e.message
       halt 400
     end
 
-    check_if_exists = Tour.where(["country = ?", country]).first
+    resultset = Tour.where(["country = ?", country]).first
 
-    #if country tour details has not changed then show existing DB results
-    if check_if_exists && check_if_exists.country == country && check_if_exists.tours == only_tours
-      id = check_if_exists.id
+    case check_db_tours(resultset, country, only_tours)
+    when 'Record exists'
+      id = resultset.id
       redirect "/#{settings.api_ver}/tours/#{id}", 303
-    else
-      #if tours has changed just update the tour details
-      if check_if_exists && check_if_exists.tours != only_tours && check_if_exists.country == country
-        tour = Tour.find_by(country: country)
-        tour.tours = only_tours
-        if tour.save
-          status 201
-          redirect "/#{settings.api_ver}/tours/#{tour.id}", 303
-        else
-          halt 500, "Error updating tour details"
-        end
-      else # if country not yet exists in the DB, save it
-        db_tour = Tour.new(country: country, tours: only_tours)
-        if db_tour.save
-          status 201
-          redirect "/#{settings.api_ver}/tours/#{db_tour.id}", 303
-        else
-          halt 500, "Error saving tours to the database"
-        end
-      end
-    end
 
+    when 'Record exists but tour details changed'
+      tour = Tour.find_by(country: country)
+      tour.tours = only_tours
+      if tour.save
+        status 201
+        redirect "/#{settings.api_ver}/tours/#{tour.id}", 303
+      else
+        halt 500, "Error updating tour details"
+      end
+
+    when 'Country does not exist'
+      db_tour = Tour.new(country: country, tours: only_tours)
+      if db_tour.save
+        status 201
+        redirect "/#{settings.api_ver}/tours/#{db_tour.id}", 303
+      else
+        halt 500, "Error saving tours to the database"
+      end
+    else
+    end
   end
 
   tour_compare = lambda do
@@ -113,20 +112,25 @@ class ApplicationController < Sinatra::Base
 
     req = JSON.parse(request.body.read)
     logger.info req
-    country_arr = req['tour_countries'].split(', ')
-    tour_categories = req['tour_categories'].split(', ')
-    req['tour_price_min'].empty? ? tour_price_min = 0 : tour_price_min = req['tour_price_min'].to_i
-    req['tour_price_max'].empty? ? tour_price_max = 99999 : tour_price_max = req['tour_price_max'].to_i
-
-    #tour_price_max = req['tour_price_max'].to_i
+    country_arr = !req['tour_countries'].nil? ? req['tour_countries'].split(', ') : []
+    tour_categories = !req['tour_categories'].nil? ? req['tour_categories'].split(', ') : []
+    tour_price_min = !req['tour_price_min'].nil? ? req['tour_price_min'].to_i : 0
+    tour_price_max = !req['tour_price_max'].nil? ? req['tour_price_max'].to_i : 99999
 
     search_results = country_arr.map do |country|
-      check_if_exists = Tour.where(["country = ?", country]).count
 
-      # if country not yet exists in the DB, save it
-      if check_if_exists == 0
-          country_search = get_tours(country).to_json
-          country_tour_list = JSON.parse(country_search)['tours']
+      begin
+       country_search = get_tours(country).to_json
+       country_tour_list = JSON.parse(country_search)['tours']
+       check_if_exists = Tour.where(["country = ?", country]).first
+      rescue StandardError => e
+       logger.info e.message
+       halt 400
+      end
+
+      # use check_db_tours helper to check if tour exists
+      case check_db_tours(check_if_exists, country, country_tour_list)
+        when 'Country does not exist'
           new_tour = Tour.new(country: country, tours: country_tour_list)
           halt 500, "Error saving tours to the database" unless new_tour.save
       end
@@ -145,7 +149,7 @@ class ApplicationController < Sinatra::Base
 
       [country, tour_data.size, tour_data]
     end
-
+    #logger.info(search_results.to_json)
     search_results.to_json
   end
 
