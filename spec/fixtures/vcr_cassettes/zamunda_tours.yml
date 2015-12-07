@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://www.lonelyplanet.com/zamunda/tours
+    uri: http://www.lonelyplanet.com/zamunda/tours.json
     body:
       encoding: US-ASCII
       string: ''
@@ -16,88 +16,63 @@ http_interactions:
   response:
     status:
       code: 404
-      message: Fastly Internal
+      message: Not Found
     headers:
+      Access-Control-Allow-Methods:
+      - GET
+      Cache-Control:
+      - no-cache
+      Content-Type:
+      - application/json; charset=utf-8
       Server:
-      - Varnish
-      Retry-After:
-      - '0'
+      - Powered by Sloths
+      Set-Cookie:
+      - _v=_split-12-canary;Path=/
+      - localeCookie=en_TW; Domain=lonelyplanet.com; Path=/
+      - lpCurrency=USD; Domain=lonelyplanet.com; Path=/
+      - lpUid=laim_lMYP1M5uhhJkuxScqY_i0zbpq7Q; expires=Sun, 04 Dec 2016 08:06:49
+        GMT; Domain=lonelyplanet.com; Path=/
+      Status:
+      - 404 Not Found
+      X-Frame-Options:
+      - ALLOW-FROM http://www.stumbleupon.com
+      X-Intercept-Error:
+      - 'true'
+      X-Request-Id:
+      - cbdaabe5-210e-45b1-9428-843de77b27d9
+      X-Runtime:
+      - '0.230765'
       Content-Length:
-      - '3409'
+      - '21'
       Accept-Ranges:
       - bytes
       Date:
-      - Sun, 08 Nov 2015 13:52:12 GMT
+      - Sat, 05 Dec 2015 08:06:49 GMT
       Via:
       - 1.1 varnish
       Connection:
-      - close
+      - keep-alive
       X-Served-By:
-      - cache-bma7029-BMA
+      - cache-hkg6826-HKG
       X-Cache:
       - MISS
       X-Cache-Hits:
       - '0'
       X-Timer:
-      - S1446990732.130576,VS0,VE411
-      Set-Cookie:
-      - localeCookie=en_TW; Domain=lonelyplanet.com; Path=/
-      - lpCurrency=USD; Domain=lonelyplanet.com; Path=/
-      - lpUid=8xXf5bTKUSnldNHGhznFS63ufRFrA2R5; expires=Mon, 07 Nov 2016 13:52:12
-        GMT; Domain=lonelyplanet.com; Path=/
+      - S1449302808.723305,VS0,VE1137
+      Vary:
+      - Fastly-SSL
       X-Geoip-Countrycode:
       - TW
       X-Geoip-Countryname:
       - Taiwan
-      X-Geoip-City:
-      - Hsinchu
       X-Geoip-Longitude:
-      - '120.971'
+      - '121.000'
       X-Geoip-Latitude:
-      - '24.805'
+      - '23.500'
     body:
-      encoding: UTF-8
-      string: "\n  <!DOCTYPE html>\n    <head>\n      <link href='//assets.staticlp.com'
-        rel='dns-prefetch'>\n      <meta charset='utf-8'>\n      <meta content='Lonely
-        Planet' name='author'>\n      <link href=\"//assets.staticlp.com/assets/common_core-998fc0c888156163a62fb8e554ecbe7d.css\"
-        media=\"all\" rel=\"stylesheet\" type=\"text/css\" />\n      <title>Lost -
-        Lonely Planet</title>\n      <style>\n\tBODY {font-family: \"freight\", \"Helvetica
-        Neue\", Arial, sans-serif;font-size: 20px;color: #67747c;-webkit-font-smoothing:
-        antialiased; }\n\ta.media--lp-logo--head-small {display: block;background-image:
-        url(http://assets.staticlp.com/assets/core/core-sprite-standard-95b081e30481565b4a0d18bd189526da.png);background-position:
-        left bottom;width: 93px;height: 50px; margin: 2px 0 0 15px}\n\ta.go-back {color:
-        white;display: block;font-size: 14px;line-height: 14px;position: absolute;right:
-        20px;top: 20px;}\n\tsection#main {margin: 7em auto 0 auto;width: 720px;text-align:
-        center;}\n\tsection#main h1 {color: #3b444f;font-size: 40px;position: relative;
-        font-weight: 700;}\n\tsection#main p {margin-bottom: 1.5em;line-height: 24px;padding:
-        0 50px;clear: both;}\n\t.btn--green {border-radius: 4px;display: inline-block;font-weight:
-        bold;font-size: 16px;padding: 15px 65px;-webkit-border-radius: 4px;-moz-border-radius:
-        4px;}\n\t.btn--green:hover {background-color:#16c98d;color:white;text-decoration:
-        none;}\n\timg.banner { margin: 1.5em 0; }\n      </style>\n    </head>\n    <body>\n
-        \     <div class=\"wrap--footer-push\">\n\t<div class=\"row row--primary\"
-        id=\"js-primary-nav\">\n\t  <div class=\"\">\n\t    <a class=\"media--lp-logo--head-small\"
-        href=\"http://www.lonelyplanet.com\"></a>\n\t    <a class=\"go-back\" href=\"/?ref=lost\">Back
-        to lonelyplanet.com</a>\n\t  </div>\n\t</div>\n\t<section id=\"main\">\n\t
-        \ <h1>Lost. Sadface.</h1>\n\t  <img src=\"http://static.lonelyplanet.com/dispatch/bucket.gif\"
-        alt=\"\" class=\"banner\" />\n\t  <p><a href=\"http://www.lonelyplanet.com/italy/venice/travel-tips-and-articles/75998?ref=lost\">Some
-        places</a> are great to lose yourself in, but not on this occasion. You could
-        try a <a href=\"http://www.lonelyplanet.com/searchResult\">search</a> or return
-        to our <a href=\"/\">home page</a>.</p>\n\t  <a class=\"btn--green\" href=\"/?ref=lost\">Go
-        Back</a>\n\t</section>\n      </div>\n      <script src=\"//assets.staticlp.com/s_code_09102014.min.js\"
-        type=\"text/javascript\"></script>\n      <script type=\"text/javascript\">\n\t//<![CDATA[\n\twindow.s.channel
-        = \"error\";\n\twindow.s.pageName = \"error: 404\";\n\twindow.s.eVar2 = \"error\";\n\twindow.s.prop7
-        = window.location.href;\n\twindow.s.track();\n\t//]]>\n      </script>\n      <script
-        type=\"text/javascript\">\n\t(function(d, t, c) {\n\t    var filepath = d.cookie.match(/lpDev/)
-        ? \"analytics.dev.js?\" + c.getTime() : \"analytics.min.js\",\n\t\tg = d.createElement(t),\n\t\ts
-        = d.getElementsByTagName(t)[0];\n\t    g.src = \"//assets.staticlp.com/analytics/\"
-        + filepath;\n\t    s.parentNode.insertBefore(g, s);\n\t}(document, \"script\",
-        new Date));\n      </script>\n      <script type=\"text/javascript\">\n\t//<![CDATA[\n\twindow.lp
-        = window.lp || {};\n\twindow.lp.analytics = window.lp.analytics || {\n\t    dataLayer:
-        {},\n\t    eventBuffer: [],\n\t    api: {\n\t\ttrackEvent: function(data)
-        {\n\t\t    window.lp.analytics.eventBuffer.push(data);\n\t\t}\n\t    }\n\t};\n\twindow.lp.analytics.api.trackEvent({\n\t
-        \   category: \"errors\",\n\t    action: \"404 page not found\",\n\t    label:
-        window.location.href\n\t});\n\t//]]>\n      </script>\n      <!-- FASTLY404
-        -->\n    </body>\n  </html>\n  "
+      encoding: ASCII-8BIT
+      string: " "
     http_version: 
-  recorded_at: Sun, 08 Nov 2015 13:52:09 GMT
+  recorded_at: Sat, 05 Dec 2015 08:06:50 GMT
 recorded_with: VCR 3.0.0

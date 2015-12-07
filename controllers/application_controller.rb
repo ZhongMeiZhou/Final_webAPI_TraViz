@@ -62,6 +62,7 @@ class ApplicationController < Sinatra::Base
 
   check_tours = lambda do
     content_type :json
+
     begin
       req = JSON.parse(request.body.read)
       logger.info req
@@ -100,12 +101,56 @@ class ApplicationController < Sinatra::Base
         end
       end
     end
+
+  end
+
+  tour_compare = lambda do
+    content_type :json
+
+    req = JSON.parse(request.body.read)
+    logger.info req
+    country_arr = req['tour_countries'].split(', ')
+    tour_categories = req['tour_categories'].split(', ')
+    req['tour_price_min'].empty? ? tour_price_min = 0 : tour_price_min = req['tour_price_min'].to_i
+    req['tour_price_max'].empty? ? tour_price_max = 99999 : tour_price_max = req['tour_price_max'].to_i
+
+    #tour_price_max = req['tour_price_max'].to_i
+
+    search_results = country_arr.map do |country|
+      check_if_exists = Tour.where(["country = ?", country]).count
+
+      # if country not yet exists in the DB, save it
+      if check_if_exists == 0
+          country_search = get_tours(country).to_json
+          country_tour_list = JSON.parse(country_search)['tours']
+          new_tour = Tour.new(country: country, tours: country_tour_list)
+          halt 500, "Error saving tours to the database" unless new_tour.save
+      end
+
+      # get country tour array
+      tour_data = JSON.parse(Tour.find_by_country(country).tours)
+
+      # remove tours out of the price range
+      tour_data.delete_if do |tour|
+        tour_price = tour['price'].gsub('$','').to_i
+        tour_price < tour_price_min || tour_price > tour_price_max
+      end
+
+      # keep tours with specified categories
+      tour_data.keep_if { |tour| tour_categories.include?(tour['category']) } unless tour_categories.empty?
+
+      [country, tour_data.size, tour_data]
+    end
+
+    search_results.to_json
+
   end
 
   # API Routes
   get "/#{settings.api_ver}/tours/:country.json", &get_country_tours
   get "/#{settings.api_ver}/tours/:id", &get_tour_id
   post "/#{settings.api_ver}/tours", &check_tours
+  post "/#{settings.api_ver}/tour_compare", &tour_compare
 
   # GUI Lambdas
   get_root = lambda do
