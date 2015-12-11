@@ -9,7 +9,7 @@ require './models/tour'
 require './forms/tour_form'
 require 'config_env'
 
-class ApplicationController < Sinatra::Base
+class APITraViz < Sinatra::Base
   helpers LP_APIHelpers
   enable :sessions
   register Sinatra::Flash
