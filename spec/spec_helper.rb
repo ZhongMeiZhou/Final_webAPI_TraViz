@@ -1,15 +1,15 @@
 ENV['RACK_ENV'] = 'test'
 
-Dir.glob('./{controllers, models, helpers}/*.rb').each { |file| require file }
+Dir.glob('./{models,helpers,controllers}/*.rb').each { |file| require file }
 require 'minitest/autorun'
 require 'rack/test'
 require 'vcr'
 require 'webmock/minitest'
-require 'capybara-webkit'
-require 'capybara'
+#require 'capybara-webkit'
+#require 'capybara'
 
 include Rack::Test::Methods
-include WebMock::API
+#include WebMock::API
 #stub_request( :any, /:3000\// ).to_rack( ApplicationController )
 
 def app
@@ -21,6 +21,4 @@ VCR.configure do |config|
   config.hook_into :webmock
 end
 
-Capybara.app = app
-
-
+#Capybara.app = app

@@ -2,9 +2,7 @@
 
 ## Endpoint
   
-  ```sh
- http://zmztours.herokuapp.com/
- ```
+ [http://zmztours.herokuapp.com/] (http://zmztours.herokuapp.com/)
 
 
 ## Description
@@ -27,6 +25,11 @@ Handles:
   - ACCEPTS => [:param] as the country of interest to get tour listings
   - RETURNS => JSON
   - SAMPLE REQUEST => http://localhost:3000/api/v1/tours/japan.json
+
+- GET /api/v1/tours/[:id]
+  - ACCEPTS => [:id] as the id of the country of interest to get tour listings
+  - RETURNS => JSON
+  - SAMPLE REQUEST => http://localhost:3000/api/v1/tours/12
 
 - POST /api/v1/tours
   - ACCEPTS => country name in JSON format

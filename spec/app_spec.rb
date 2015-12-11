@@ -6,6 +6,7 @@ describe 'Check if service root is valid' do
   it 'should return ok' do
     get '/'
     last_response.must_be :ok?
+    last_response.body.must_match(/ZMZ/i)
   end
 end
 
@@ -14,7 +15,7 @@ describe 'Getting tour listings' do
 
   it 'should receive parameter and return a json' do
     VCR.use_cassette('honduras_tours') do
-      get '/api/v1/tours/honduras.json'
+      get "/api/v1/tours/honduras.json"
     end
     last_response.must_be :ok?
     last_response.headers['Content-Type'].must_equal CONTENT_TYPE
@@ -33,14 +34,14 @@ describe 'checking country tours from DB' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = { country: 'belize' }
 
-    # Check redirect URL from post request
+      # Check redirect URL from post request
     VCR.use_cassette('tours_happy') do
       post '/api/v1/tours', body.to_json, header
       last_response.must_be :redirect?
       next_location = last_response.location
       next_location.must_match %r{api\/v1\/tours\/\d+}
 
-      #Check if request parameters are stored in ActiveRecord data store
+      # Check if request parameters are stored in ActiveRecord data store
       tour_id = next_location.scan(%r{tours\/(\d+)}).flatten[0].to_i
       save_tour = Tour.find(tour_id)
       save_tour.country.must_equal body[:country]
@@ -55,20 +56,19 @@ describe 'checking country tours from DB' do
     end
   end
 
-    it 'should return 404 for unknown countries' do
-        header = { 'CONTENT_TYPE' => 'application/json' }
-        body = {country: 'zamunda'}
+  it 'should return 404 for unknown countries' do
+    header = { 'CONTENT_TYPE' => 'application/json' }
+    body = {country: 'zamunda'}
 
-        post '/api/v1/tours', body.to_json, header
-        last_response.must_be :not_found?
-      end
-
-      it 'should return 400 for bad JSON formatting' do
-        header = { 'CONTENT_TYPE' => 'application/json' }
-        body = 'abcdefghijklmnopqrstuvwz'
-
-        post '/api/v1/tours', body, header
-        last_response.must_be :bad_request?
-      end
-
+    post '/api/v1/tours', body.to_json, header
+    last_response.must_be :not_found?
   end
+
+  it 'should return 400 for bad JSON formatting' do
+    header = { 'CONTENT_TYPE' => 'application/json' }
+    body = 'abcdefghijklmnopqrstuvwz'
+
+    post '/api/v1/tours', body, header
+    last_response.must_be :bad_request?
+  end
+end
