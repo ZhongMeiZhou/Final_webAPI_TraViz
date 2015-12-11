@@ -15,6 +15,7 @@ gem 'hirb'
 gem 'puma'
 gem 'virtus'
 gem 'activemodel'
+gem 'config_env'
 
 group :test do
   gem 'minitest'
@@ -24,12 +25,4 @@ group :test do
   gem 'webmock'
   gem 'capybara-webkit', '~> 1.7', '>= 1.7.1'
   gem 'minitest-capybara'
-end
-
-group :development, :test do
-  gem 'sqlite3'
-end
-
-group :production do
-  gem 'pg'
 end
