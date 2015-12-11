@@ -15,6 +15,7 @@ gem 'hirb'
 gem 'puma'
 gem 'virtus'
 gem 'activemodel'
+gem 'config_env'
 
 group :test do
   gem 'minitest'
