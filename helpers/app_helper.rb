@@ -23,8 +23,8 @@ module LP_APIHelpers
 		end
 	end
 
+	# Use model tour.rb
 	def get_country_id(country, only_tours)
-		resultset = Tour.where(["country = ?", country]).first
 		case check_db_tours(resultset, country, only_tours)
     	when 'Record exists'
       	return resultset.id
@@ -45,11 +45,13 @@ module LP_APIHelpers
 				else
 					halt 500, "Error saving tours to the database"
       	end
+			else
 			end
-		end
 	end
 
-	def check_db_tours(resultset, country, tourslist)
+	# Use the model tour.rb
+	def check_db_tours(country, tourslist)
+		resultset = Tour.where(["country = ?", country]).first
     #if country tour details has not changed then show existing DB results
     if resultset && resultset.country == country && resultset.tours == tourslist
       'Record exists'
@@ -64,5 +66,4 @@ module LP_APIHelpers
 		end
 	end
 
-	
 end
