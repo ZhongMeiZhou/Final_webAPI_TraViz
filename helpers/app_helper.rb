@@ -18,7 +18,7 @@ module LP_APIHelpers
       #if tours has changed but record exists just update the tour details
       if resultset && resultset.tours != tourslist && resultset.country == country
       	'Record exists but tour details changed'
-      	else 
+      	else
       	# if country not yet exists in the DB
       	'Country does not exist'
       end
