@@ -12,6 +12,7 @@ class CheckTours
 
   private
 
+  # Use the model tour to scrape the country's tours 
   def get_tours(country)
       begin
         Tours.new(country)

@@ -47,65 +47,33 @@ class APITraViz < Sinatra::Base
   #Call the service check_tour
   get_country_tours = lambda do
     content_type :json
-    tours = CheckTours.new(params[:country])
+    tours = CheckTours.new.call(params[:country])
     tours.nil ? hatl(404): tours
     end
   end
 
+  # Use the app_helper to get the data from DB
   get_tour_id = lambda do
     content_type :json
-    begin
-      tour = Tour.find(params[:id])
-      country = tour.country
-      tours = tour.tours
-      logger.info({ id: tour.id, country: country }.to_json)
-      { id: tour.id, country: country, tours: tours}.to_json
-    rescue
-      halt 400
-    end
+    tour_finder(params[:id])
   end
 
   check_tours = lambda do
     content_type :json
-
     begin
       req = JSON.parse(request.body.read)
-      logger.info req
+      #logger.info req
       country = req['country'].strip.downcase
-      scraped_list = get_tours(country).to_json
-      only_tours = JSON.parse(scraped_list)['tours']
+      tours = CheckTours.new.call(country)
+      #scraped_list = get_tours(country).to_json
+      only_tours = JSON.parse(tours)['tours']
     rescue StandardError => e
       logger.info e.message
       halt 400
     end
-
-    resultset = Tour.where(["country = ?", country]).first
-
-    case check_db_tours(resultset, country, only_tours)
-    when 'Record exists'
-      id = resultset.id
-      redirect "/#{settings.api_ver}/tours/#{id}", 303
-
-    when 'Record exists but tour details changed'
-      tour = Tour.find_by(country: country)
-      tour.tours = only_tours
-      if tour.save
-        status 201
-        redirect "/#{settings.api_ver}/tours/#{tour.id}", 303
-      else
-        halt 500, "Error updating tour details"
-      end
-
-    when 'Country does not exist'
-      db_tour = Tour.new(country: country, tours: only_tours)
-      if db_tour.save
-        status 201
-        redirect "/#{settings.api_ver}/tours/#{db_tour.id}", 303
-      else
-        halt 500, "Error saving tours to the database"
-      end
-    else
-    end
+    # use app_helper to get the id of the country from existing data or create new one.
+    id = get_country_id(country, only_tours)
+    redirect "/#{settings.api_ver}/tours/#{id}", 303
   end
 
   tour_compare = lambda do
