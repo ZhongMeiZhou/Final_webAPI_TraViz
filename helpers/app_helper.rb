@@ -3,12 +3,12 @@ require_relative '../models/lonely_planet_tours'
 module LP_APIHelpers
 	VERSION = '1.0.1'
 
-	def get_tours(country)
-      Tours.new(country)
-    rescue StandardError => e
-      logger.info e.message
-      halt 404, "#{e.message}"
-    end
+	#def get_tours(country)
+  #    Tours.new(country)
+  #  rescue StandardError => e
+  #    logger.info e.message
+  #    halt 404, "#{e.message}"
+	#end
 
     def check_db_tours(resultset, country, tourslist)
       #if country tour details has not changed then show existing DB results

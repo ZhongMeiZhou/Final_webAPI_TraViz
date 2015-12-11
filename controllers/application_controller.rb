@@ -5,33 +5,33 @@ require 'hirb'
 require 'slim'
 require 'json'
 require './helpers/app_helper'
-require './models/tour'
+#require './models/tour'
 require './forms/tour_form'
-require 'config_env'
+#require 'config_env'
 
 class APITraViz < Sinatra::Base
   helpers LP_APIHelpers
-  enable :sessions
-  register Sinatra::Flash
+  #enable :sessions
+  #register Sinatra::Flash
   use Rack::MethodOverride
 
-  set :views, File.expand_path('../../views', __FILE__)
-  set :public_folder, File.expand_path('../../public', __FILE__)
+  #set :views, File.expand_path('../../views', __FILE__)
+  #set :public_folder, File.expand_path('../../public', __FILE__)
 
   configure do
     Hirb.enable
-    set :session_secret, 'zmz!'
-    set :api_ver, 'api/v1'
+    #set :session_secret, 'zmz!'
+    set :api_ver, 'api/v2'
   end
 
-  configure :development,:test do
-    set :api_server, 'http://localhost:3000'
-    ConfigEnv.path_to_config("#{__dir__}/../config/config_env.rb")
-  end
+  #configure :development,:test do
+  #  set :api_server, 'http://localhost:3000'
+  #  ConfigEnv.path_to_config("#{__dir__}/../config/config_env.rb")
+  #end
 
-  configure :production do
-    set :api_server, 'http://zmztours.herokuapp.com'
-  end
+  #configure :production do
+  #  set :api_server, 'http://zmztours.herokuapp.com'
+  #end
 
   configure :production, :development do
     enable :logging
@@ -39,17 +39,16 @@ class APITraViz < Sinatra::Base
 
 
   get_root = lambda do
-    "ZMZ Traviz API Service"
+    "ZMZ Traviz API Service, #{settings.api_ver}"
   end
 
   # API Lambdas
+
+  #Call the service check_tour
   get_country_tours = lambda do
     content_type :json
-    begin
-      get_tours(params[:country]).to_json
-    rescue StandardError => e
-      logger.info e.message
-      halt 400
+    tours = CheckTours.new(params[:country])
+    tours.nil ? hatl(404): tours
     end
   end
 
