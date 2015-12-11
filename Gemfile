@@ -26,11 +26,3 @@ group :test do
   gem 'capybara-webkit', '~> 1.7', '>= 1.7.1'
   gem 'minitest-capybara'
 end
-
-group :development, :test do
-  gem 'sqlite3'
-end
-
-group :production do
-  gem 'pg'
-end

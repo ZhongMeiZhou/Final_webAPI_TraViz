@@ -7,6 +7,7 @@ require 'json'
 require './helpers/app_helper'
 require './models/tour'
 require './forms/tour_form'
+require 'config_env'
 
 class ApplicationController < Sinatra::Base
   helpers LP_APIHelpers
@@ -25,6 +26,7 @@ class ApplicationController < Sinatra::Base
 
   configure :development,:test do
     set :api_server, 'http://localhost:3000'
+    ConfigEnv.path_to_config("#{__dir__}/../config/config_env.rb")
   end
 
   configure :production do
@@ -159,6 +161,9 @@ class ApplicationController < Sinatra::Base
   get "/#{settings.api_ver}/tours/:id", &get_tour_id
   post "/#{settings.api_ver}/tours", &check_tours
   post "/#{settings.api_ver}/tour_compare", &tour_compare
+  get "/green" do
+    "Our favorite robot from Star Wars is #{ENV['FNAME']}#{ENV['LNAME']}."
+  end
 end
 
 
@@ -238,4 +243,3 @@ end
   post "/tours", &post_tours
   get '/tours/:id', &get_tours
 =end
-
