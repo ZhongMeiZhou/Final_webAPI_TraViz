@@ -51,7 +51,7 @@ class APITraViz < Sinatra::Base
   get_country_tours = lambda do
     content_type :json
     tours = CheckTours.new.call(params[:country])
-    tours.nil ? hatl(404): tours
+    tours.nil ? halt(404): tours
   end
 
   # Use the app_helper to get the data from DB
@@ -64,11 +64,10 @@ class APITraViz < Sinatra::Base
     content_type :json
     begin
       req = JSON.parse(request.body.read)
-      logger.info req
       country = req['country'].strip.downcase
-      tours = CheckTours.new.call(country)
+      country_tours_data = CheckTours.new.call(country)
       #scraped_list = get_tours(country).to_json
-      only_tours = JSON.parse(tours)['tours']
+      only_tours = JSON.parse(country_tours_data)['tours']
     rescue StandardError => e
       logger.info e.message
       halt 400
@@ -81,7 +80,6 @@ class APITraViz < Sinatra::Base
   tour_compare = lambda do
     content_type :json
     req = JSON.parse(request.body.read)
-    #logger.info req
     CompareTours.new.call(req)
   end
 
@@ -91,10 +89,6 @@ class APITraViz < Sinatra::Base
   get "/#{settings.api_ver}/tours/:id", &get_tour_id
   post "/#{settings.api_ver}/tours", &check_tours
   post "/#{settings.api_ver}/tour_compare", &tour_compare
-
-  get "/green" do
-    "Our favorite robot from Star Wars is #{ENV['FNAME']}#{ENV['LNAME']}."
-  end
 
 end
 
