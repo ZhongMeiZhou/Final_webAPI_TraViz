@@ -1,6 +1,6 @@
 ENV['RACK_ENV'] = 'test'
 
-Dir.glob('./{models,helpers,controllers}/*.rb').each { |file| require file }
+Dir.glob('./{models,helpers,controllers}/init.rb').each { |file| require file }
 require 'minitest/autorun'
 require 'rack/test'
 require 'vcr'
@@ -9,11 +9,11 @@ require 'webmock/minitest'
 #require 'capybara'
 
 include Rack::Test::Methods
-#include WebMock::API
+include WebMock::API
 #stub_request( :any, /:3000\// ).to_rack( ApplicationController )
 
 def app
-  ApplicationController
+  APITraViz
 end
 
 VCR.configure do |config|

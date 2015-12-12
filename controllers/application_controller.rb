@@ -5,29 +5,31 @@ require 'hirb'
 require 'slim'
 require 'json'
 require './helpers/app_helper'
+require 'config_env'
+require 'aws-sdk'
 #require './models/tour'
 #require './forms/tour_form'
-#require 'config_env'
+
 
 class APITraViz < Sinatra::Base
   helpers LP_APIHelpers
-  #enable :sessions
+  enable :sessions
   #register Sinatra::Flash
-  #use Rack::MethodOverride
+  use Rack::MethodOverride
 
   #set :views, File.expand_path('../../views', __FILE__)
   #set :public_folder, File.expand_path('../../public', __FILE__)
 
   configure do
     Hirb.enable
-    #set :session_secret, 'zmz!'
+    set :session_secret, 'zmz!'
     set :api_ver, 'api/v2'
   end
 
-  #configure :development,:test do
-  #  set :api_server, 'http://localhost:3000'
-  #  ConfigEnv.path_to_config("#{__dir__}/../config/config_env.rb")
-  #end
+  configure :development,:test do
+    set :api_server, 'http://localhost:3000'
+    ConfigEnv.path_to_config("#{__dir__}/../config/config_env.rb")
+  end
 
   #configure :production do
   #  set :api_server, 'http://zmztours.herokuapp.com'
@@ -49,7 +51,6 @@ class APITraViz < Sinatra::Base
     content_type :json
     tours = CheckTours.new.call(params[:country])
     tours.nil ? hatl(404): tours
-    end
   end
 
   # Use the app_helper to get the data from DB
@@ -89,9 +90,11 @@ class APITraViz < Sinatra::Base
   get "/#{settings.api_ver}/tours/:id", &get_tour_id
   post "/#{settings.api_ver}/tours", &check_tours
   post "/#{settings.api_ver}/tour_compare", &tour_compare
+
   get "/green" do
     "Our favorite robot from Star Wars is #{ENV['FNAME']}#{ENV['LNAME']}."
   end
+
 end
 
 
