@@ -5,31 +5,33 @@ require 'hirb'
 require 'slim'
 require 'json'
 require './helpers/app_helper'
-require './models/tour'
-require './forms/tour_form'
+#require './models/tour'
+#require './forms/tour_form'
+#require 'config_env'
 
-class ApplicationController < Sinatra::Base
+class APITraViz < Sinatra::Base
   helpers LP_APIHelpers
-  enable :sessions
-  register Sinatra::Flash
-  use Rack::MethodOverride
+  #enable :sessions
+  #register Sinatra::Flash
+  #use Rack::MethodOverride
 
-  set :views, File.expand_path('../../views', __FILE__)
-  set :public_folder, File.expand_path('../../public', __FILE__)
+  #set :views, File.expand_path('../../views', __FILE__)
+  #set :public_folder, File.expand_path('../../public', __FILE__)
 
   configure do
     Hirb.enable
-    set :session_secret, 'zmz!'
-    set :api_ver, 'api/v1'
+    #set :session_secret, 'zmz!'
+    set :api_ver, 'api/v2'
   end
 
-  configure :development,:test do
-    set :api_server, 'http://localhost:3000'
-  end
+  #configure :development,:test do
+  #  set :api_server, 'http://localhost:3000'
+  #  ConfigEnv.path_to_config("#{__dir__}/../config/config_env.rb")
+  #end
 
-  configure :production do
-    set :api_server, 'http://zmztours.herokuapp.com'
-  end
+  #configure :production do
+  #  set :api_server, 'http://zmztours.herokuapp.com'
+  #end
 
   configure :production, :development do
     enable :logging
@@ -37,120 +39,48 @@ class ApplicationController < Sinatra::Base
 
 
   get_root = lambda do
-    "ZMZ Traviz API Service"
+    "ZMZ Traviz API Service, #{settings.api_ver}"
   end
 
   # API Lambdas
+
+  #Call the service check_tour
   get_country_tours = lambda do
     content_type :json
-    begin
-      get_tours(params[:country]).to_json
-    rescue StandardError => e
-      logger.info e.message
-      halt 400
+    tours = CheckTours.new.call(params[:country])
+    tours.nil ? hatl(404): tours
     end
   end
 
+  # Use the app_helper to get the data from DB
   get_tour_id = lambda do
     content_type :json
-    begin
-      tour = Tour.find(params[:id])
-      country = tour.country
-      tours = tour.tours
-      logger.info({ id: tour.id, country: country }.to_json)
-      { id: tour.id, country: country, tours: tours}.to_json
-    rescue
-      halt 400
-    end
+    tour_finder(params[:id])
   end
 
   check_tours = lambda do
     content_type :json
-
     begin
       req = JSON.parse(request.body.read)
       logger.info req
       country = req['country'].strip.downcase
-      scraped_list = get_tours(country).to_json
-      only_tours = JSON.parse(scraped_list)['tours']
+      tours = CheckTours.new.call(country)
+      #scraped_list = get_tours(country).to_json
+      only_tours = JSON.parse(tours)['tours']
     rescue StandardError => e
       logger.info e.message
       halt 400
     end
-
-    resultset = Tour.where(["country = ?", country]).first
-
-    case check_db_tours(resultset, country, only_tours)
-    when 'Record exists'
-      id = resultset.id
-      redirect "/#{settings.api_ver}/tours/#{id}", 303
-
-    when 'Record exists but tour details changed'
-      tour = Tour.find_by(country: country)
-      tour.tours = only_tours
-      if tour.save
-        status 201
-        redirect "/#{settings.api_ver}/tours/#{tour.id}", 303
-      else
-        halt 500, "Error updating tour details"
-      end
-
-    when 'Country does not exist'
-      db_tour = Tour.new(country: country, tours: only_tours)
-      if db_tour.save
-        status 201
-        redirect "/#{settings.api_ver}/tours/#{db_tour.id}", 303
-      else
-        halt 500, "Error saving tours to the database"
-      end
-    else
-    end
+    # use app_helper to get the id of the country from existing data or create new one.
+    id = get_country_id(country, only_tours)
+    redirect "/#{settings.api_ver}/tours/#{id}", 303
   end
 
   tour_compare = lambda do
     content_type :json
-
     req = JSON.parse(request.body.read)
-    logger.info req
-    country_arr = !req['tour_countries'].nil? ? req['tour_countries'].split(', ') : []
-    tour_categories = !req['tour_categories'].nil? ? req['tour_categories'].split(', ') : []
-    tour_price_min = !req['tour_price_min'].nil? ? req['tour_price_min'].to_i : 0
-    tour_price_max = !req['tour_price_max'].nil? ? req['tour_price_max'].to_i : 99999
-
-    search_results = country_arr.map do |country|
-
-      begin
-       country_search = get_tours(country).to_json
-       country_tour_list = JSON.parse(country_search)['tours']
-       check_if_exists = Tour.where(["country = ?", country]).first
-      rescue StandardError => e
-       logger.info e.message
-       halt 400
-      end
-
-      # use check_db_tours helper to check if tour exists
-      case check_db_tours(check_if_exists, country, country_tour_list)
-        when 'Country does not exist'
-          new_tour = Tour.new(country: country, tours: country_tour_list)
-          halt 500, "Error saving tours to the database" unless new_tour.save
-      end
-
-      # get country tour array
-      tour_data = JSON.parse(Tour.find_by_country(country).tours)
-
-      # remove tours out of the price range
-      tour_data.delete_if do |tour|
-        tour_price = tour['price'].gsub('$','').to_i
-        tour_price < tour_price_min || tour_price > tour_price_max
-      end
-
-      # keep tours with specified categories
-      tour_data.keep_if { |tour| tour_categories.include?(tour['category']) } unless tour_categories.empty?
-
-      [country, tour_data.size, tour_data]
-    end
-    #logger.info(search_results.to_json)
-    search_results.to_json
+    #logger.info req
+    CompareTours.new.call(req)
   end
 
   # API Routes
@@ -159,6 +89,9 @@ class ApplicationController < Sinatra::Base
   get "/#{settings.api_ver}/tours/:id", &get_tour_id
   post "/#{settings.api_ver}/tours", &check_tours
   post "/#{settings.api_ver}/tour_compare", &tour_compare
+  get "/green" do
+    "Our favorite robot from Star Wars is #{ENV['FNAME']}#{ENV['LNAME']}."
+  end
 end
 
 
@@ -238,4 +171,3 @@ end
   post "/tours", &post_tours
   get '/tours/:id', &get_tours
 =end
-
