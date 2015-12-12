@@ -15,7 +15,7 @@ describe 'Getting tour listings' do
 
   it 'should receive parameter and return a json' do
     VCR.use_cassette('honduras_tours') do
-      get "/api/v1/tours/honduras.json"
+      get "/api/v2/tours/honduras.json"
     end
     last_response.must_be :ok?
     last_response.headers['Content-Type'].must_equal CONTENT_TYPE
@@ -23,7 +23,7 @@ describe 'Getting tour listings' do
 
   it 'should return 404 for unknown country tour request' do
     VCR.use_cassette('zamunda_tours') do
-      get '/api/v1/tours/zamunda.json'
+      get '/api/v2/tours/zamunda.json'
     end
     last_response.status.must_equal 404
   end
@@ -36,7 +36,7 @@ describe 'checking country tours from DB' do
 
       # Check redirect URL from post request
     VCR.use_cassette('tours_happy') do
-      post '/api/v1/tours', body.to_json, header
+      post '/api/v2/tours', body.to_json, header
       last_response.must_be :redirect?
       next_location = last_response.location
       next_location.must_match %r{api\/v1\/tours\/\d+}
@@ -60,7 +60,7 @@ describe 'checking country tours from DB' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = {country: 'zamunda'}
 
-    post '/api/v1/tours', body.to_json, header
+    post '/api/v2/tours', body.to_json, header
     last_response.must_be :not_found?
   end
 
@@ -68,7 +68,7 @@ describe 'checking country tours from DB' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = 'abcdefghijklmnopqrstuvwz'
 
-    post '/api/v1/tours', body, header
+    post '/api/v2/tours', body, header
     last_response.must_be :bad_request?
   end
 end

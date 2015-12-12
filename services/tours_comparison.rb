@@ -14,13 +14,13 @@ class CompareTours
 
   private
 
-  def countries_tours(country_arr, tour_categories, tour_price_min, tour_price_max))
+  def countries_tours(country_arr, tour_categories, tour_price_min, tour_price_max)
     search_results = country_arr.map do |country|
       begin
         country_search = CheckTours.new.call(country)
         country_tour_list = JSON.parse(country_search)['tours']
       rescue StandardError => e
-        logger.info e.message
+        # logger.info e.message
         halt 400
       end
       id = get_country_id(country, country_tour_list)
@@ -46,5 +46,5 @@ class CompareTours
     #logger.info(search_results.to_json)
     search_results
   end
-  
+
 end

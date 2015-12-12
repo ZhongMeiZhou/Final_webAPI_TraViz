@@ -26,7 +26,8 @@ class APITraViz < Sinatra::Base
     set :api_ver, 'api/v2'
   end
 
-  configure :development,:test do
+  configure :development, :test do
+    enable :logging
     set :api_server, 'http://localhost:3000'
     ConfigEnv.path_to_config("#{__dir__}/../config/config_env.rb")
   end
@@ -35,7 +36,7 @@ class APITraViz < Sinatra::Base
   #  set :api_server, 'http://zmztours.herokuapp.com'
   #end
 
-  configure :production, :development do
+  configure :production do
     enable :logging
   end
 

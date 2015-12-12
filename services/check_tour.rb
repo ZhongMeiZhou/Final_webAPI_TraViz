@@ -12,13 +12,14 @@ class CheckTours
 
   private
 
-  # Use the model tour to scrape the country's tours 
+  # Use the model tour to scrape the country's tours
   def get_tours(country)
       begin
         Tours.new(country)
       rescue StandardError => e
-        logger.info e.message
+        # logger.info e.message
         halt 404, "#{e.message}"
+      end
   end
 
 end
