@@ -1,3 +1,3 @@
-Dir.glob('./{config,models,services,controllers}/*.rb').each { |file| require file }
+Dir.glob('./{config,services,models,controllers}/init.rb').each { |file| require file }
 
 run APITraViz

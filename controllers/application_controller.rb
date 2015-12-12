@@ -32,6 +32,10 @@ class APITraViz < Sinatra::Base
     ConfigEnv.path_to_config("#{__dir__}/../config/config_env.rb")
   end
 
+  Aws.config.update({
+    region: ENV['AWS_REGION'],
+    credentials: Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY']),
+    })
   #configure :production do
   #  set :api_server, 'http://zmztours.herokuapp.com'
   #end

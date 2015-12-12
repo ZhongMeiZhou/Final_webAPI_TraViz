@@ -2,6 +2,9 @@ require 'dynamoid'
 
 class Tour
   include Dynamoid::Document
+
+  table :name => :tours, :key => :tour_id, :read_capacity => 5, :write_capacity => 5
+
   field :country, :string
   field :tours, :string
 
