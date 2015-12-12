@@ -16,6 +16,8 @@ gem 'puma'
 gem 'virtus'
 gem 'activemodel'
 gem 'config_env'
+gem 'dynamoid'
+gem 'aws-sdk'
 
 group :test do
   gem 'minitest'
