@@ -2,7 +2,7 @@ require_relative './check_tour'
 require_relative '../helpers/app_helper'
 
 class CompareTours
-
+  include LP_APIHelpers
   def call (req)
     country_arr = !req['tour_countries'].nil? ? req['tour_countries'].split(', ') : []
     tour_categories = !req['tour_categories'].nil? ? req['tour_categories'].split(', ') : []
@@ -20,8 +20,8 @@ class CompareTours
         country_search = CheckTours.new.call(country)
         country_tour_list = JSON.parse(country_search)['tours']
       rescue StandardError => e
-        # logger.info e.message
-        halt 400
+        #logger.info e.message
+        # halt 400
       end
       id = get_country_id(country, country_tour_list)
       # use check_db_tours helper to check if tour exists

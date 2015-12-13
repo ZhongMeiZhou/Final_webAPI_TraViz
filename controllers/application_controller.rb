@@ -1,8 +1,8 @@
 require 'sinatra/base'
 require 'sinatra/flash'
-require 'httparty'
+#require 'httparty'
 require 'hirb'
-require 'slim'
+#require 'slim'
 require 'json'
 require './helpers/app_helper'
 require 'config_env'
@@ -52,8 +52,12 @@ class APITraViz < Sinatra::Base
   #Call the service check_tour
   get_country_tours = lambda do
     content_type :json
-    tours = CheckTours.new.call(params[:country])
-    tours.nil? ? halt(404) : tours
+    #begin
+      tours = CheckTours.new.call(params[:country])
+    #rescue => e
+      tours.nil? ? halt(404) : tours
+      #halt 404, e.message
+    #end
   end
 
   # Use the app_helper to get the data from DB
@@ -68,9 +72,9 @@ class APITraViz < Sinatra::Base
       req = JSON.parse(request.body.read)
       country = req['country'].strip.downcase
       country_tours_data = CheckTours.new.call(country)
+      country_tours_data.nil? ? halt(404) : only_tours = JSON.parse(country_tours_data)['tours']
       #scraped_list = get_tours(country).to_json
-      only_tours = JSON.parse(country_tours_data)['tours']
-    rescue StandardError => e
+    rescue => e
       logger.info e.message
       halt 400
     end

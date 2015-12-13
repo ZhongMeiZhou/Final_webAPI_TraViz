@@ -1,4 +1,5 @@
 #require_relative '../models/lonely_planet_tours'
+require_relative '../models/tour'
 
 module LP_APIHelpers
 	VERSION = '2.0.0'
@@ -25,7 +26,7 @@ module LP_APIHelpers
 
 	# Use model tour.rb
 	def get_country_id(country, only_tours)
-		case check_db_tours(resultset, country, only_tours)
+		case check_db_tours(country, only_tours)
     	when 'Record exists'
       	return resultset.id
 			when 'Record exists but tour details changed'

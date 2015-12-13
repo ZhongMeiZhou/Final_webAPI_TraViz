@@ -1,27 +1,20 @@
-#require 'virtus'
-#require 'active_model'
-#require_relative '../forms/tourResult_form'
-require 'sinatra/base'
+require_relative '../models/lonely_planet_tours'
 
 class CheckTours
   def call(country)
     return nil unless country
 
-    tours = get_tours(country)
-    return tours.to_json
+      tours = get_tours(country)
+      return tours.to_json
+    rescue
+      nil
   end
 
   private
 
-  # Use the model tour to scrape the country's tours
+  # Use the model lonely_planet_tours to scrape the country's tours
   def get_tours(country)
-      begin
         Tours.new(country)
-      rescue StandardError => e
-        # logger.info e.message
-        # halt 404, "#{e.message}"
-        "#{e.message}"
-      end
   end
 
 end
