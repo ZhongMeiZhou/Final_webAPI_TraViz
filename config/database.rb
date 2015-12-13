@@ -1,8 +1,11 @@
 require 'dynamoid'
 require 'aws-sdk'
 require 'config_env'
+require 'sinatra'
 
-ConfigEnv.path_to_config("#{__dir__}/../config/config_env.rb")
+configure :development, :test do
+  ConfigEnv.path_to_config("#{__dir__}/../config/config_env.rb")
+end
 
 Aws.config.update({
   region: ENV['AWS_REGION'],
