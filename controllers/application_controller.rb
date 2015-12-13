@@ -7,6 +7,7 @@ require 'json'
 require './helpers/app_helper'
 require 'config_env'
 require 'aws-sdk'
+require_relative '../services/init'
 #require './models/tour'
 #require './forms/tour_form'
 
@@ -29,13 +30,10 @@ class APITraViz < Sinatra::Base
   configure :development, :test do
     enable :logging
     set :api_server, 'http://localhost:3000'
-    ConfigEnv.path_to_config("#{__dir__}/../config/config_env.rb")
+    #ConfigEnv.path_to_config("#{__dir__}/../config/config_env.rb")
   end
 
-  Aws.config.update({
-    region: ENV['AWS_REGION'],
-    credentials: Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY']),
-    })
+
   #configure :production do
   #  set :api_server, 'http://zmztours.herokuapp.com'
   #end
@@ -55,7 +53,7 @@ class APITraViz < Sinatra::Base
   get_country_tours = lambda do
     content_type :json
     tours = CheckTours.new.call(params[:country])
-    tours.nil ? halt(404): tours
+    tours.nil? ? halt(404): tours
   end
 
   # Use the app_helper to get the data from DB
@@ -93,7 +91,6 @@ class APITraViz < Sinatra::Base
   get "/#{settings.api_ver}/tours/:id", &get_tour_id
   post "/#{settings.api_ver}/tours", &check_tours
   post "/#{settings.api_ver}/tour_compare", &tour_compare
-
 end
 
 

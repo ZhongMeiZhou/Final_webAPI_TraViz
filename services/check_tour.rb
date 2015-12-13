@@ -1,6 +1,7 @@
 #require 'virtus'
 #require 'active_model'
 #require_relative '../forms/tourResult_form'
+require 'sinatra/base'
 
 class CheckTours
   def call(country)
@@ -18,7 +19,8 @@ class CheckTours
         Tours.new(country)
       rescue StandardError => e
         # logger.info e.message
-        halt 404, "#{e.message}"
+        # halt 404, "#{e.message}"
+        "#{e.message}"
       end
   end
 
