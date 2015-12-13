@@ -14,6 +14,4 @@ module CheckTours
       end
       end
     end
-
-
 end

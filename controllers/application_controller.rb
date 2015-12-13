@@ -115,7 +115,6 @@ class ApplicationController < Sinatra::Base
   tour_compare = lambda do
     content_type :json
 
-    results = Hash.new
     req = JSON.parse(request.body.read)
     logger.info req
     country_arr = !req['tour_countries'].nil? ? req['tour_countries'] : []
@@ -124,9 +123,11 @@ class ApplicationController < Sinatra::Base
     tour_price_max = !req['tour_price_max'].nil? ? req['tour_price_max'].to_i : 99999
 
     search_results = country_arr.each_with_index.map do |country,*|
+      results = Hash.new
+      data = []
 
       begin
-       country_search = get_tours(country).to_json
+       country_search = get_tours_by_country(country).to_json
        country_tour_list = JSON.parse(country_search)['tours']
        check_if_exists = Tour.where(["country = ?", country]).first
       rescue StandardError => e
@@ -147,23 +148,20 @@ class ApplicationController < Sinatra::Base
       end
 
       # build object for use in column chart visualization, revise to count based on price and category
-      # SAMPLE result: [{country: 'Belize', Small Group Tours: 12, Water Sports:34}]
+      # SAMPLE result: [{country: 'Belize', data: [['History', 4],['Cycling', 4]]},...]
 
       results['country'] = country
       tour_data = JSON.parse(Tour.find_by_country(country).tours)
        
-      CATEGORIES.each do |category|
-       data = []
+       CATEGORIES.map do |category|
        num_per_category = 0
        num_per_category = tour_data.select do |h|
-        h['category'] == category && price_in_range(strip_price(h['price']), 0, 2000)
+        h['category'] == category && price_in_range(strip_price(h['price']), 0, 90000)
        end.count
-       results[category] = num_per_category
-       #data.push(num_per_category.to_s)
+       results['data'] = data.push([category, num_per_category])
       end
-      #results['data'] = data
-      results['total_tours'] = tour_data.size
-      results['all_tours'] = tour_data
+      #results['total_tours'] = tour_data.size
+      #results['all_tours'] = tour_data
 
 
       # remove tours out of the price range
@@ -173,11 +171,11 @@ class ApplicationController < Sinatra::Base
       #end
       # keep tours with specified categories
       #tour_data.keep_if { |tour| tour_categories.include?(tour['category']) } unless tour_categories.empty?
-  
-
       logger.info(JSON.pretty_generate(results))
       results
-    end.to_json
+    end
+
+    search_results.to_json
   end
 
   # API Routes
