@@ -1,4 +1,5 @@
 source 'http://rubygems.org'
+ruby '2.2.1'
 ruby '2.2.3' #will cause exception if you are running a different version of ruby than what is specified here
 
 gem 'sinatra'
