@@ -5,21 +5,24 @@ require 'hirb'
 require 'slim'
 require 'json'
 require './helpers/app_helper'
-require './models/tour'
-require './forms/tour_form'
+require './models/init'
+require './services/init'
+#require './forms/tour_form'
 
 class ApplicationController < Sinatra::Base
-  helpers LP_APIHelpers
-  enable :sessions
-  register Sinatra::Flash
-  use Rack::MethodOverride
+  helpers LP_APIHelpers # include helpers
+  include CheckTours # service defined to check tours in db
+  include GetTours # service defined to get tours from lonely planet gem
 
-  set :views, File.expand_path('../../views', __FILE__)
-  set :public_folder, File.expand_path('../../public', __FILE__)
+  #enable :sessions
+  #register Sinatra::Flash
+  #use Rack::MethodOverride
+  #set :views, File.expand_path('../../views', __FILE__)
+  #set :public_folder, File.expand_path('../../public', __FILE__)
 
   configure do
     Hirb.enable
-    set :session_secret, 'zmz!'
+    #set :session_secret, 'zmz!'
     set :api_ver, 'api/v1'
   end
 
@@ -40,17 +43,18 @@ class ApplicationController < Sinatra::Base
     "ZMZ Traviz API Service"
   end
 
-  # API Lambdas
+  # may not be used if we are not adding functionality to search for one country
   get_country_tours = lambda do
     content_type :json
     begin
-      get_tours(params[:country]).to_json
+      get_tours_by_country(params[:country]).to_json
     rescue StandardError => e
       logger.info e.message
       halt 400
     end
   end
 
+  # may not be used if we are not adding functionality to search for one country
   get_tour_id = lambda do
     content_type :json
     begin
@@ -71,7 +75,7 @@ class ApplicationController < Sinatra::Base
       req = JSON.parse(request.body.read)
       logger.info req
       country = req['country'].strip.downcase
-      scraped_list = get_tours(country).to_json
+      scraped_list = get_tours_by_country(country).to_json
       only_tours = JSON.parse(scraped_list)['tours']
     rescue StandardError => e
       logger.info e.message
@@ -107,17 +111,19 @@ class ApplicationController < Sinatra::Base
     end
   end
 
+
   tour_compare = lambda do
     content_type :json
 
+    results = Hash.new
     req = JSON.parse(request.body.read)
     logger.info req
-    country_arr = !req['tour_countries'].nil? ? req['tour_countries'].split(', ') : []
-    tour_categories = !req['tour_categories'].nil? ? req['tour_categories'].split(', ') : []
+    country_arr = !req['tour_countries'].nil? ? req['tour_countries'] : []
+    tour_categories = !req['tour_categories'].nil? ? req['tour_categories'] : []
     tour_price_min = !req['tour_price_min'].nil? ? req['tour_price_min'].to_i : 0
     tour_price_max = !req['tour_price_max'].nil? ? req['tour_price_max'].to_i : 99999
 
-    search_results = country_arr.map do |country|
+    search_results = country_arr.each_with_index.map do |country,*|
 
       begin
        country_search = get_tours(country).to_json
@@ -128,29 +134,50 @@ class ApplicationController < Sinatra::Base
        halt 400
       end
 
-      # use check_db_tours helper to check if tour exists
+      # use check_db_tours service to run tour checks against DB
       case check_db_tours(check_if_exists, country, country_tour_list)
         when 'Country does not exist'
           new_tour = Tour.new(country: country, tours: country_tour_list)
           halt 500, "Error saving tours to the database" unless new_tour.save
+
+        when 'Record exists but tour details changed'
+          tour = Tour.find_by(country: country)
+          tour.tours = country_tour_list
+          halt 500, "Error updating tour details" unless tour.save
       end
 
-      # get country tour array
+      # build object for use in column chart visualization, revise to count based on price and category
+      # SAMPLE result: [{country: 'Belize', Small Group Tours: 12, Water Sports:34}]
+
+      results['country'] = country
       tour_data = JSON.parse(Tour.find_by_country(country).tours)
+       
+      CATEGORIES.each do |category|
+       data = []
+       num_per_category = 0
+       num_per_category = tour_data.select do |h|
+        h['category'] == category && price_in_range(strip_price(h['price']), 0, 2000)
+       end.count
+       results[category] = num_per_category
+       #data.push(num_per_category.to_s)
+      end
+      #results['data'] = data
+      results['total_tours'] = tour_data.size
+      results['all_tours'] = tour_data
+
 
       # remove tours out of the price range
-      tour_data.delete_if do |tour|
-        tour_price = tour['price'].gsub('$','').to_i
-        tour_price < tour_price_min || tour_price > tour_price_max
-      end
-
+      #tour_data.delete_if do |tour|
+        #tour_price = tour['price'].gsub('$','').to_i
+        #tour_price < tour_price_min || tour_price > tour_price_max
+      #end
       # keep tours with specified categories
-      tour_data.keep_if { |tour| tour_categories.include?(tour['category']) } unless tour_categories.empty?
+      #tour_data.keep_if { |tour| tour_categories.include?(tour['category']) } unless tour_categories.empty?
+  
 
-      [country, tour_data.size, tour_data]
-    end
-    #logger.info(search_results.to_json)
-    search_results.to_json
+      logger.info(JSON.pretty_generate(results))
+      results
+    end.to_json
   end
 
   # API Routes

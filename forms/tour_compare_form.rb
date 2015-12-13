@@ -2,6 +2,7 @@ require 'virtus'
 require 'active_model'
 require 'json'
 
+#not needed since web app being removed
 class TourString < Virtus::Attribute
   def coerce(value)
     value.downcase

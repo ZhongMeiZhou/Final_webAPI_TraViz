@@ -1,5 +1,5 @@
 source 'http://rubygems.org'
-ruby '2.2.1'
+ruby '2.2.3' #will cause exception if you are running a different version of ruby than what is specified here
 
 gem 'sinatra'
 gem 'thin'
@@ -15,6 +15,8 @@ gem 'hirb'
 gem 'puma'
 gem 'virtus'
 gem 'activemodel'
+gem 'aws-sdk', '~>2'
+gem 'dynamoid', '~>1'
 
 group :test do
   gem 'minitest'
@@ -22,8 +24,8 @@ group :test do
   gem 'rack-test'
   gem 'vcr'
   gem 'webmock'
-  gem 'capybara-webkit', '~> 1.7', '>= 1.7.1'
-  gem 'minitest-capybara'
+  #gem 'capybara-webkit', '~> 1.7', '>= 1.7.1'
+  #gem 'minitest-capybara'
 end
 
 group :development, :test do

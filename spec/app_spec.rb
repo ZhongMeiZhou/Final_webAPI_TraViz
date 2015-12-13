@@ -56,6 +56,14 @@ describe 'checking country tours from DB' do
     end
   end
 
+
+  describe 'Check Compare tours route' do
+
+    #scenario 1: User enters 
+
+
+  end
+
   it 'should return 404 for unknown countries' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = {country: 'zamunda'}
