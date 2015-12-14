@@ -37,7 +37,7 @@ class CompareTours
         end
         results['total_tours'] = tour_data.size
         results['all_tours'] = tour_data
-        logger.info(JSON.pretty_generate(results))
+        #logger.info(JSON.pretty_generate(results))
         results
 
         # handle return of tours below
