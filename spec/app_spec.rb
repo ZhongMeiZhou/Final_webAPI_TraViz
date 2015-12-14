@@ -159,7 +159,7 @@ describe 'Check complex search method' do
 
     #total_tours.must_be :==, 34
 
-  end
+  #end
 
   it 'should return tour data with all filters' do
     header = { 'CONTENT_TYPE' => 'application/json' }
