@@ -146,6 +146,7 @@ DEPENDENCIES
   activemodel
   activerecord
   aws-sdk (~> 2)
+  capybara-webkit (~> 1.7, >= 1.7.1)
   config_env
   dynamoid (~> 1)
   hirb
