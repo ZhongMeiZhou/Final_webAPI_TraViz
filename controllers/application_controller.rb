@@ -63,7 +63,8 @@ class APITraViz < Sinatra::Base
   # Use the app_helper to get the data from DB
   get_tour_id = lambda do
     content_type :json
-    tour_finder(params[:id])
+    tour_list = tour_finder(params[:id])
+    tour_list.nil? ? halt(404) : tour_list
   end
 
   check_tours = lambda do
@@ -79,7 +80,12 @@ class APITraViz < Sinatra::Base
       halt 400
     end
     # use app_helper to get the id of the country from existing data or create new one.
-    id = get_country_id(country, only_tours)
+    begin
+      id = get_country_id(country, only_tours)
+    rescue => e
+      logger.info e.message
+      halt 500, e.message
+    end
     redirect "/#{settings.api_ver}/tours/#{id}", 303
   end
 

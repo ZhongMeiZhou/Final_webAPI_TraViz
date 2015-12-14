@@ -3,7 +3,7 @@ require_relative '../models/lonely_planet_tours'
 class CheckTours
   def call(country)
     return nil unless country
-
+    
       tours = get_tours(country)
       return tours.to_json
     rescue

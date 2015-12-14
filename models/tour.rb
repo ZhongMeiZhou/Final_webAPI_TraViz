@@ -8,6 +8,8 @@ class Tour
   field :country, :string
   field :tours, :string
 
+  validates_presence_of :country, :tours
+
   def self.destroy(id)
     find(id).destroy
   end

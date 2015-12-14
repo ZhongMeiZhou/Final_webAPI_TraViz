@@ -5,9 +5,9 @@ class CompareTours
   include LP_APIHelpers
   def call (req)
     country_arr = !req['tour_countries'].nil? ? req['tour_countries'].split(', ') : []
-    tour_categories = !req['tour_categories'].nil? ? req['tour_categories'].split(', ') : []
-    tour_price_min = !req['tour_price_min'].nil? ? req['tour_price_min'].to_i : 0
-    tour_price_max = !req['tour_price_max'].nil? ? req['tour_price_max'].to_i : 99999
+    tour_categories = !req['tour_categories'].empty? ? req['tour_categories'].split(', ') : []
+    tour_price_min = !req['tour_price_min'].empty? ? req['tour_price_min'].to_i : 0
+    tour_price_max = !req['tour_price_max'].empty? ? req['tour_price_max'].to_i : 99999
     tour_comparison = countries_tours(country_arr, tour_categories, tour_price_min, tour_price_max)
     tour_comparison.to_json
   end
@@ -16,14 +16,14 @@ class CompareTours
 
   def countries_tours(country_arr, tour_categories, tour_price_min, tour_price_max)
     search_results = country_arr.map do |country|
-      begin
+      #begin
         country_search = CheckTours.new.call(country)
         country_tour_list = JSON.parse(country_search)['tours']
-      rescue StandardError => e
+        id = get_country_id(country, country_tour_list)
+      #rescue StandardError => e
         #logger.info e.message
         # halt 400
-      end
-      id = get_country_id(country, country_tour_list)
+      #end
       # use check_db_tours helper to check if tour exists
       #case check_db_tours(country, country_tour_list)
       #  when 'Country does not exist'
@@ -33,7 +33,12 @@ class CompareTours
       #end
 
       # get country tour array
-      tour_data = JSON.parse(tour_finder(id)['tours'])
+      #begin
+        tour_data = JSON.parse(country_tour_list)
+      #rescue => e
+        #e.message
+      #end
+
       # remove tours out of the price range
       tour_data.delete_if do |tour|
         tour_price = tour['price'].gsub('$','').to_i

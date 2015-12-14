@@ -39,16 +39,17 @@ describe 'checking country tours from DB' do
       post '/api/v2/tours', body.to_json, header
       last_response.must_be :redirect?
       next_location = last_response.location
-      next_location.must_match %r{api\/v1\/tours\/\d+}
+      next_location.must_match /api\/v2\/tours\/.+/
 
       # Check if request parameters are stored in ActiveRecord data store
-      tour_id = next_location.scan(%r{tours\/(\d+)}).flatten[0].to_i
-      save_tour = Tour.find(tour_id)
+      tour_id = next_location.scan(/tours\/(.+)/).flatten[0] #[/([^\/]+)$/]
+      #tour_id = "76870dd2-ac7d-4a18-8d3c-d33280eaa231"
+      save_tour = Tour.find_by_tour_id(tour_id)
       save_tour.country.must_equal body[:country]
 
       # Check if redirect works
       follow_redirect!
-      last_request.url.must_match %r{api\/v1\/tours\/\d+}
+      last_request.url.must_match %r{api\/v2\/tours\/\d+}
 
       #Check if redirected response has results
       last_response.body.wont_equal ''
@@ -97,7 +98,7 @@ describe 'Check complex search method' do
       total_tours += tour_info.size
     end
 
-    total_tours.must_be :==, 42
+    total_tours.must_be :==, 43
 
   end
 
@@ -123,7 +124,7 @@ describe 'Check complex search method' do
       total_tours += tour_info.size
     end
 
-    total_tours.must_be :==, 36
+    total_tours.must_be :==, 37
 
   end
 
@@ -149,7 +150,7 @@ describe 'Check complex search method' do
       total_tours += tour_info.size
     end
 
-    total_tours.must_be :==, 32
+    total_tours.must_be :==, 34
 
   end
 
