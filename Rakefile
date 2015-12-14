@@ -1,4 +1,4 @@
-Dir.glob('./{config,models,services,controllers}/init.rb').each { |file| require file }
+Dir.glob('./{config,models,services,helpers,controllers}/init.rb').each { |file| require file }
 
 require 'rake/testtask'
 #require 'sinatra/activerecord'

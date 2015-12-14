@@ -1,6 +1,6 @@
+require_relative '../helpers/init'
 require_relative 'spec_helper'
 require 'json'
-
 
 describe 'Check if service root is valid' do
   it 'should return ok' do
@@ -79,10 +79,10 @@ describe 'Check complex search method' do
   it 'should return tour data with no filters' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = {
-      tour_countries: 'Honduras, Belize, Nicaragua',
-      tour_categories: '',
-      tour_price_min: '',
-      tour_price_max: '',
+      tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
+      tour_categories: [],
+      tour_price_min: 0,
+      tour_price_max: 90000,
     }
     VCR.use_cassette('webappmethods') do
       post '/api/v2/tour_compare', body.to_json, header
@@ -105,10 +105,10 @@ describe 'Check complex search method' do
   it 'should return tour data with category filters' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = {
-      tour_countries: 'Honduras, Belize, Nicaragua',
-      tour_categories: 'History & Culture, Small Group Tours',
-      tour_price_min: '',
-      tour_price_max: '',
+      tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
+      tour_categories: ['History & Culture', 'Small Group Tours'],
+      tour_price_min: 0,
+      tour_price_max: 90000,
     }
     VCR.use_cassette('webappmethods') do
       post '/api/v2/tour_compare', body.to_json, header
@@ -131,10 +131,10 @@ describe 'Check complex search method' do
   it 'should return tour data with price filters' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = {
-      tour_countries: 'Honduras, Belize, Nicaragua',
-      tour_categories: '',
-      tour_price_min: '150',
-      tour_price_max: '2500',
+      tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
+      tour_categories: [],
+      tour_price_min: 0,
+      tour_price_max: 90000,
     }
     VCR.use_cassette('webappmethods') do
       post '/api/v2/tour_compare', body.to_json, header
@@ -157,10 +157,10 @@ describe 'Check complex search method' do
   it 'should return tour data with all filters' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = {
-      tour_countries: 'Honduras, Belize, Nicaragua',
-      tour_categories: 'Cycling, Hiking & Trekking, History & Culture, Nature & Wildlife, Sightseeing Tours, Water Sports',
-      tour_price_min: '1000',
-      tour_price_max: '4500',
+      tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
+      tour_categories: ['Small Group Tours', 'Adventure', 'Sightseeing', 'Health & Wellness', 'History & Culture', 'Water Sports', 'Short Break', 'Cycling', 'Nature & Wildlife', 'Holidays, Festivals & Seasonal']  #can scrape from lonely planet in case this updates,
+      tour_price_min: 0,
+      tour_price_max: 90000,
     }
     VCR.use_cassette('webappmethods') do
       post '/api/v2/tour_compare', body.to_json, header
