@@ -32,7 +32,7 @@ class CompareTours
         CATEGORIES.map do |category|
           num_per_category = 0
           num_per_category = tour_data.select do |h|
-            h['category'] == category && price_in_range(strip_price(h['price']), 0, 90000)
+            h['category'] == category && price_in_range(strip_price(h['price']), tour_price_min, tour_price_max)
           end.count
           results['data'] = data.push([category, num_per_category])
         end

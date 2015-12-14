@@ -1,4 +1,4 @@
-#LPTours Webservice [ ![Codeship Status for ZhongMeiZhou/scraper_webAPI](https://codeship.com/projects/5a3f7fb0-62aa-0133-fec9-1af77e49650b/status?branch=master)](https://codeship.com/projects/112659)
+#LPTours TraViz Webservice [ ![Codeship Status for ZhongMeiZhou/Final_webAPI_TraViz](https://codeship.com/projects/9ea65a20-81e3-0133-22f1-22940a7a47c6/status?branch=master)](https://codeship.com/projects/121399)
 
 ## Endpoint
   
@@ -7,7 +7,7 @@
 
 ## Description
 
-A simple web service that scrapes Lonely Planet tours by country using the [lonely_planet_tours](https://github.com/ZhongMeiZhou/scraper_project) gem
+A simple web service that scrapes Lonely Planet tours based on several parameters using the [lonely_planet_tours](https://github.com/ZhongMeiZhou/scraper_project) gem
 
 
 ## Usage and Examples
@@ -35,3 +35,11 @@ Handles:
   - ACCEPTS => country name in JSON format
   - RETURNS => JSON
   - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d "{\"country\":\"Honduras\"}" http://localhost:3000/api/v1/tours
+
+- POST /api/v1/tour_compare
+  - ACCEPTS => multiple countries, categories and a price range
+  - RETURNS => JSON
+  - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d 
+  "{\"tour_countries\":[\"Honduras\", \"Belize\"],
+  \"tour_categories\":[\"Cycling\", \"Small Group Tours\"],
+  \"inputPriceRange\":\"200;800\"}" http://localhost:3000/api/v1/tours
