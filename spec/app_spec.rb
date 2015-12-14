@@ -158,7 +158,7 @@ describe 'Check complex search method' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = {
       tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
-      tour_categories: ['Small Group Tours', 'Adventure', 'Sightseeing', 'Health & Wellness', 'History & Culture', 'Water Sports', 'Short Break', 'Cycling', 'Nature & Wildlife', 'Holidays, Festivals & Seasonal']  #can scrape from lonely planet in case this updates,
+      tour_categories: ['Small Group Tours', 'Adventure', 'Sightseeing', 'Health & Wellness', 'History & Culture', 'Water Sports', 'Short Break', 'Cycling', 'Nature & Wildlife', 'Holidays, Festivals & Seasonal'],
       tour_price_min: 0,
       tour_price_max: 90000,
     }
