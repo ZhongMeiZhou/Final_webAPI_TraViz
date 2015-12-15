@@ -1,13 +1,16 @@
-#LPTours TraViz Webservice [ ![Codeship Status for ZhongMeiZhou/Final_webAPI_TraViz](https://codeship.com/projects/9ea65a20-81e3-0133-22f1-22940a7a47c6/status?branch=master)](https://codeship.com/projects/121399)
+#TraViz Webservice [ ![Codeship Status for ZhongMeiZhou/Final_webAPI_TraViz](https://codeship.com/projects/9ea65a20-81e3-0133-22f1-22940a7a47c6/status?branch=master)](https://codeship.com/projects/121399)
 
 ## Endpoint
   
- [http://zmztours.herokuapp.com/] (http://zmztours.herokuapp.com/)
+ [https://dynamozmz.herokuapp.com/] (https://dynamozmz.herokuapp.com/)
 
 
 ## Description
 
 A simple web service that scrapes Lonely Planet tours based on several parameters using the [lonely_planet_tours](https://github.com/ZhongMeiZhou/scraper_project) gem
+
+## Recent Changes
+ - Added functionality to generate the number of tours per country based on tour categories and price range which will be used to generate a visualization tour results
 
 
 ## Usage and Examples
@@ -42,4 +45,4 @@ Handles:
   - SAMPLE REQUEST =>  curl -v -H "Accept: application/json" -H "Content-type: application/json" \ -X POST -d 
   "{\"tour_countries\":[\"Honduras\", \"Belize\"],
   \"tour_categories\":[\"Cycling\", \"Small Group Tours\"],
-  \"inputPriceRange\":\"200;800\"}" http://localhost:3000/api/v1/tours
+  \"inputPriceRange\":\"200;800\"}" http://localhost:3000/api/v1/tour_compare
