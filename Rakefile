@@ -15,7 +15,7 @@ namespace :db do
   require_relative 'config/init'
   require_relative 'models/tour'
 
-  desc 'Create tutorial table'
+  desc 'Create Tour table'
   task :migrate do
     begin
       Tour.create_table

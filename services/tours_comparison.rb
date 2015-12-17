@@ -37,7 +37,7 @@ class CompareTours
           results['data'] = data.push([category, num_per_category])
         end
         #results['total_tours'] = tour_data.size
-        results['all_tours'] = tour_data # handle return of tours to match criteria as well
+        #results['all_tours'] = tour_data # handle return of tours to match criteria as well
         #logger = Logger.new(STDOUT)
         #logger.info(JSON.pretty_generate(results))
         results
