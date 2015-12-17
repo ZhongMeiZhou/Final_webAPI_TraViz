@@ -6,7 +6,7 @@ class CompareTours
   def call (req)
     country_arr = !req['tour_countries'].nil? ? req['tour_countries'] : []
     tour_categories = !req['tour_categories'].nil? ? req['tour_categories'] : []
-    price = !req['inputPriceRange'].nil? ? req['inputPriceRange'].split(",").map(&:to_i) : [0, 999999]
+    price = !req['inputPriceRange'].nil? ? req['inputPriceRange'].split(";").map(&:to_i) : [0, 999999]
     tour_price_min = price[0] #!req['tour_price_min'].nil? ? req['tour_price_min'].to_i : 0
     tour_price_max = price[1] #!req['tour_price_max'].nil? ? req['tour_price_max'].to_i : 999999
     tour_comparison = countries_tours(country_arr, tour_categories, tour_price_min, tour_price_max)
@@ -37,7 +37,7 @@ class CompareTours
           results['data'] = data.push([category, num_per_category])
         end
         #results['total_tours'] = tour_data.size
-        results['all_tours'] = tour_data # handle return of tours to match criteria as well
+        #results['all_tours'] = tour_data # handle return of tours to match criteria as well
         #logger = Logger.new(STDOUT)
         #logger.info(JSON.pretty_generate(results))
         results

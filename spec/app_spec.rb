@@ -81,7 +81,7 @@ describe 'Check complex search method' do
     body = {
       tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
       tour_categories: [],
-      inputPriceRange: '0,999999' # by default will have values unlike country and category
+      inputPriceRange: '0;999999' # by default will have values unlike country and category
     }
     VCR.use_cassette('webappmethods') do
       post '/api/v2/tour_compare', body.to_json, header
@@ -109,7 +109,7 @@ describe 'Check complex search method' do
     body = {
       tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
       tour_categories: ['History & Culture', 'Small Group Tours'],
-      inputPriceRange: '0,999999'
+      inputPriceRange: '0;999999'
     }
     VCR.use_cassette('webappmethods') do
       post '/api/v2/tour_compare', body.to_json, header
@@ -166,7 +166,7 @@ describe 'Check complex search method' do
     body = {
       tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
       tour_categories: ['Small Group Tours', 'Adventure', 'Sightseeing', 'Health & Wellness', 'History & Culture', 'Water Sports', 'Short Break', 'Cycling', 'Nature & Wildlife', 'Holidays, Festivals & Seasonal'],
-      inputPriceRange: '0,999999'
+      inputPriceRange: '0;999999'
     }
     VCR.use_cassette('webappmethods') do
       post '/api/v2/tour_compare', body.to_json, header
