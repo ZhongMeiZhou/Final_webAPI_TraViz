@@ -30,7 +30,7 @@ class APITraViz < Sinatra::Base
   configure :development, :test do
     enable :logging
     set :api_server, 'http://localhost:3000'
-    ConfigEnv.path_to_config("#{__dir__}/../config/config_env.example.rb")
+    ConfigEnv.path_to_config("#{__dir__}/../config/config_env.rb")
   end
 
 
