@@ -26,13 +26,15 @@ class CompareTours
         country_tour_list = JSON.parse(country_search)['tours']
         id = get_country_id(country, country_tour_list) # why id? should just take appropriate action if country exists or not
 
-        results['country'] = country
+        results['name'] = country
         tour_data = JSON.parse(Tour.find_by_country(country).tours)
 
-        CATEGORIES.map do |category|
+        tour_categories.map do |category|
           num_per_category = 0
           num_per_category = tour_data.select do |h|
-            h['category'] == category && price_in_range(strip_price(h['price']), tour_price_min, tour_price_max)
+           #if tour_categories.include?(category) do #add criteria to only allow categories selected to be included
+             h['category'] == category && price_in_range(strip_price(h['price']), tour_price_min, tour_price_max)
+          # end
           end.count
           results['data'] = data.push([category, num_per_category])
         end
