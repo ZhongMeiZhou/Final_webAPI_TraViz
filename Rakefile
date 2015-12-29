@@ -25,16 +25,3 @@ namespace :db do
     end
   end
 end
-
-namespace :scrape_sqs do
-  require 'aws-sdk'
-
-  desc 'Create Scraper Queue'
-  task :create do
-    begin
-
-    rescue
-      puts 'Something happened!'
-    end
-  end
-end

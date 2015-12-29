@@ -41,7 +41,7 @@ module LP_APIHelpers
       	end
 			when 'Country does not exist'
       	db_tour = Tour.new(country: country, tours: only_tours)
-				# add country to queue
+				add_to_queue(country)
       	if db_tour.save
         	#status 201
 					return db_tour.tour_id
