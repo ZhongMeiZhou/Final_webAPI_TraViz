@@ -1,4 +1,5 @@
 #require_relative '../models/lonely_planet_tours'
+require 'aws-sdk'
 require_relative '../models/tour'
 
 module LP_APIHelpers
@@ -40,6 +41,7 @@ module LP_APIHelpers
       	end
 			when 'Country does not exist'
       	db_tour = Tour.new(country: country, tours: only_tours)
+				add_to_queue(country)
       	if db_tour.save
         	#status 201
 					return db_tour.tour_id
@@ -67,7 +69,7 @@ module LP_APIHelpers
     	end
 		end
 	end
-	
+
 	def strip_price(value)
       value.gsub('$','').to_i
     end
@@ -76,4 +78,20 @@ module LP_APIHelpers
       price >= min && price <= max
     end
 
+		def add_to_queue(country)
+			# create credentials
+      aws_access = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
+      # create queue subscriber
+      sqs = Aws::SQS::Client.new(region: ENV['AWS_REGION'], credentials: aws_access)
+      # get queue URL
+			queue_url = sqs.get_queue_url(queue_name: 'zmz_scraper_queue').queue_url
+      # prep message
+      message_details = {
+        queue_url: 			queue_url,
+        message_body: 	country,
+        delay_seconds:	1,
+      }
+      # publish message
+      sqs.send_message(message_details)
+		end
 end

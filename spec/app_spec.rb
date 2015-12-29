@@ -79,7 +79,7 @@ describe 'Check complex search method' do
   it 'should return tour data with required country filter' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = {
-      tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
+      tour_countries: ['Honduras', 'Belize', 'Nicaragua'], #tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
       tour_categories: [],
       inputPriceRange: '0;999999' # by default will have values unlike country and category
     }
@@ -91,16 +91,6 @@ describe 'Check complex search method' do
     last_response.body.wont_equal ''
     search_results = JSON.parse(last_response.body)
     search_results.count.must_be :>, 0
-
-    #maybe too specific?
-    #search_results.count.must_be :==, 3
-    #search_results.must_be_kind_of Array
-    #total_tours = 0
-    #search_results.each do |country_info|
-      #tour_info = country_info[2]
-      #total_tours += tour_info.size
-    #end
-    #total_tours.must_be :==, 43
 
   end
 
@@ -120,46 +110,7 @@ describe 'Check complex search method' do
     search_results = JSON.parse(last_response.body)
     search_results.count.must_be :>, 0
 
-    #search_results.count.must_be :==, 3
-    #search_results.must_be_kind_of Array
-    #total_tours = 0
-    #search_results.each do |country_info|
-      #tour_info = country_info[2]
-      #total_tours += tour_info.size
-    #end
-
-    #total_tours.must_be :==, 37
-
   end
-
-  
-  #it 'should return tour data with country and price filters' do
-    #header = { 'CONTENT_TYPE' => 'application/json' }
-    #body = {
-      #tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
-      #tour_categories: [],
-      #inputPriceRange: '0,999999'
-    #}
-    #VCR.use_cassette('webappmethods') do
-      #post '/api/v2/tour_compare', body.to_json, header
-    #end
-
-    #last_response.must_be :ok?
-    #last_response.body.wont_equal ''
-    #search_results = JSON.parse(last_response.body)
-    #search_results.count.must_be :>, 0
-
-    #search_results.count.must_be :==, 3
-    #search_results.must_be_kind_of Array
-    #total_tours = 0
-    #search_results.each do |country_info|
-      #tour_info = country_info[2]
-      #total_tours += tour_info.size
-    #end
-
-    #total_tours.must_be :==, 34
-
-  #end
 
   it 'should return tour data with all filters' do
     header = { 'CONTENT_TYPE' => 'application/json' }
@@ -176,16 +127,6 @@ describe 'Check complex search method' do
     last_response.body.wont_equal ''
     search_results = JSON.parse(last_response.body)
     search_results.count.must_be :>, 0
-
-    #search_results.count.must_be :==, 3
-    #search_results.must_be_kind_of Array
-    #total_tours = 0
-    #search_results.each do |country_info|
-      #tour_info = country_info[2]
-      #total_tours += tour_info.size
-    #end
-
-    #total_tours.must_be :==, 16
 
   end
 end
