@@ -30,7 +30,7 @@ http_interactions:
       - _v=_split-12-canary;Path=/
       - localeCookie=en_TW; Domain=lonelyplanet.com; Path=/
       - lpCurrency=USD; Domain=lonelyplanet.com; Path=/
-      - lpUid=HZ12Krdnc0ZRCn-dN2Dgb02UXtYAlxUy; expires=Wed, 28 Dec 2016 10:05:02
+      - lpUid=3ZuansVrjmxk6dEtsFMAnFbRoYO0MoOC; expires=Wed, 28 Dec 2016 12:16:07
         GMT; Domain=lonelyplanet.com; Path=/
       Status:
       - 404 Not Found
@@ -39,27 +39,27 @@ http_interactions:
       X-Intercept-Error:
       - 'true'
       X-Request-Id:
-      - 1ec403da-224d-48e7-9c30-bbedc3625201
+      - 5d01c77a-8eba-42e0-8df9-f0720877a229
       X-Runtime:
-      - '0.354562'
+      - '0.248372'
       Content-Length:
       - '21'
       Accept-Ranges:
       - bytes
       Date:
-      - Tue, 29 Dec 2015 10:05:02 GMT
+      - Tue, 29 Dec 2015 12:16:07 GMT
       Via:
       - 1.1 varnish
       Connection:
       - keep-alive
       X-Served-By:
-      - cache-hkg6827-HKG
+      - cache-hkg6825-HKG
       X-Cache:
       - MISS
       X-Cache-Hits:
       - '0'
       X-Timer:
-      - S1451383501.837649,VS0,VE803
+      - S1451391367.094876,VS0,VE476
       Vary:
       - Fastly-SSL
       X-Geoip-Countrycode:
@@ -76,5 +76,5 @@ http_interactions:
       encoding: ASCII-8BIT
       string: " "
     http_version: 
-  recorded_at: Tue, 29 Dec 2015 10:05:02 GMT
+  recorded_at: Tue, 29 Dec 2015 12:16:07 GMT
 recorded_with: VCR 3.0.0
