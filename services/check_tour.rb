@@ -6,15 +6,16 @@ class CheckTours
     
       tours = get_tours(country)
       return tours.to_json
-    rescue
-      nil
+    rescue StandardError => e
+      #logger = Logger.new(STDOUT)
+      logger.info e.message
   end
 
   private
 
   # Use the model lonely_planet_tours to scrape the country's tours
   def get_tours(country)
-        Tours.new(country)
+    Tours.new(country)
   end
 
 end
