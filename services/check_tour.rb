@@ -6,9 +6,8 @@ class CheckTours
     
       tours = get_tours(country)
       return tours.to_json
-    rescue StandardError => e
-      logger = Logger.new(STDOUT)
-      logger.info e.message
+    rescue
+      nil
   end
 
   private
