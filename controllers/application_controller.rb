@@ -1,47 +1,16 @@
 require 'sinatra/base'
-require 'sinatra/flash'
-#require 'httparty'
-require 'hirb'
-#require 'slim'
+#require 'sinatra/flash'
+#require 'hirb'
 require 'json'
-require 'config_env'
-require 'aws-sdk'
+#require 'config_env'
+#require 'aws-sdk'
+#require 'dalli'
 require_relative '../helpers/init'
 require_relative '../services/init'
-#require './models/tour'
-#require './forms/tour_form'
 
 
 class APITraViz < Sinatra::Base
   helpers LP_APIHelpers
-  enable :sessions
-  #register Sinatra::Flash
-  use Rack::MethodOverride
-
-  #set :views, File.expand_path('../../views', __FILE__)
-  #set :public_folder, File.expand_path('../../public', __FILE__)
-
-  configure do
-    Hirb.enable
-    set :session_secret, 'zmz!'
-    set :api_ver, 'api/v2'
-  end
-
-  configure :development, :test do
-    enable :logging
-    set :api_server, 'http://localhost:3000'
-    ConfigEnv.path_to_config("#{__dir__}/../config/config_env.rb")
-  end
-
-
-  #configure :production do
-  #  set :api_server, 'http://zmztours.herokuapp.com'
-  #end
-
-  configure :production do
-    enable :logging
-  end
-
 
   get_root = lambda do
     "ZMZ Traviz API Service, #{settings.api_ver}"
@@ -53,7 +22,7 @@ class APITraViz < Sinatra::Base
   get_country_tours = lambda do
     content_type :json
     #begin
-      tours = CheckTours.new.call(params[:country])
+      tours = CheckTours.new.call(params[:country], settings)
     #rescue => e
       tours.nil? ? halt(404) : tours
       #halt 404, e.message
@@ -72,9 +41,8 @@ class APITraViz < Sinatra::Base
     begin
       req = JSON.parse(request.body.read)
       country = req['country'].strip.downcase
-      country_tours_data = CheckTours.new.call(country)
+      country_tours_data = CheckTours.new.call(country, settings)
       country_tours_data.nil? ? halt(404) : only_tours = JSON.parse(country_tours_data)['tours']
-      #scraped_list = get_tours(country).to_json
     rescue => e
       logger.info e.message
       halt 400
@@ -92,7 +60,7 @@ class APITraViz < Sinatra::Base
   tour_compare = lambda do
     content_type :json
     req = JSON.parse(request.body.read)
-    CompareTours.new.call(req)
+    CompareTours.new.call(req, settings)
   end
 
   # API Routes
