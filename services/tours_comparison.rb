@@ -3,7 +3,8 @@ require_relative '../helpers/app_helper'
 
 class CompareTours
   include LP_APIHelpers
-  def call (req)
+  def call (req, settings)
+    @settings = settings
     country_arr = !req['tour_countries'].nil? ? req['tour_countries'] : []
     tour_categories = !req['tour_categories'].nil? ? req['tour_categories'] : []
     price = !req['inputPriceRange'].nil? ? req['inputPriceRange'].split(";").map(&:to_i) : [0, 999999]
@@ -22,12 +23,13 @@ class CompareTours
       data = []
 
       #begin
-        country_search = CheckTours.new.call(country)
+        country_search = CheckTours.new.call(country, @settings)
         country_tour_list = JSON.parse(country_search)['tours']
-        id = get_country_id(country, country_tour_list) # why id? should just take appropriate action if country exists or not
+        id = get_country_id(country, country_tour_list) # why id? should just take appropriate action if country exists or not // This method provide the ID if exists in DB. If not, it will save it.
+
 
         results['name'] = country
-        tour_data = JSON.parse(Tour.find_by_country(country).tours)
+        tour_data = JSON.parse(Tour.find_by_country(country).tours)  # in first instance, I used ID here to look for the data.
 
         tour_categories.map do |category|
           num_per_category = 0
@@ -43,9 +45,9 @@ class CompareTours
         #logger = Logger.new(STDOUT)
         #logger.info(JSON.pretty_generate(results))
         results
-        
 
-      
+
+
       #rescue StandardError => e
         #logger.info e.message
         # halt 400
