@@ -61,6 +61,7 @@ class APITraViz < Sinatra::Base
     content_type :json
     req = JSON.parse(request.body.read)
     CompareTours.new.call(req, settings)
+    #CheckTours.new.call('st-lucia')
   end
 
   # API Routes
