@@ -18,6 +18,7 @@ gem 'activemodel'
 gem 'config_env'
 gem 'dynamoid', '~> 1'
 gem 'aws-sdk', '~> 2'
+gem 'dalli'
 
 group :test do
   gem 'minitest'
