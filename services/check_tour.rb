@@ -14,7 +14,7 @@ class CheckTours
 
   # Use the model lonely_planet_tours to scrape the country's tours
   def get_tours(country)
-        Tours.new(country)
+    Tours.new(country)
   end
 
 end
