@@ -30,7 +30,6 @@ class CheckTours
     #@settings.traviz_cache.fetch(country, ttl=@settings.traviz_cache_ttl) { tours.to_json}
     @settings.traviz_cache.get(country, ttl=@settings.traviz_cache_ttl)
   rescue => e
-    print "algo malo paso #{e}"
     logger.info "GET_CACHED_TOURS failed: #{e}"
     nil
   end
@@ -38,8 +37,6 @@ class CheckTours
   def encache_traviz(country, tours)
     @settings.traviz_cache.set(country, tours, ttl=@settings.traviz_cache_ttl)
   rescue => e
-    print "otra cosa paso paso #{e}"
     logger.info "ENCACHE_TRAVIZ failed: #{e}"
-    e.message
   end
 end
