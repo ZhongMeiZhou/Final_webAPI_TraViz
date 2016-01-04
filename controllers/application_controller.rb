@@ -67,7 +67,7 @@ class APITraViz < Sinatra::Base
 
   send_email = lambda do
     content_type :json
-    EmailWorker.perform_async('test@address.com')
+    EmailWorker.perform_async('csrordz@gmail.com')
     { message: 'Got it, sending it.' }.to_json
   end
 

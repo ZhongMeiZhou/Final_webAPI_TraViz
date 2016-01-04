@@ -20,6 +20,7 @@ gem 'dynamoid', '~> 1'
 gem 'aws-sdk', '~> 2'
 gem 'dalli'
 gem 'shoryuken'
+gem 'sendgrid-ruby'
 
 group :test do
   gem 'minitest'
