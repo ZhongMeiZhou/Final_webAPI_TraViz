@@ -1,3 +1,4 @@
 config/config_env.rb
+workers/shoryuken.yml
 .bundle/
 db/*.db
