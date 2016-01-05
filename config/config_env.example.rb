@@ -1,6 +1,8 @@
 config_env do
   set 'AWS_ACCESS_KEY_ID', '...'
   set 'AWS_SECRET_ACCESS_KEY', '...'
+  set 'SG_UN', '...'
+  set 'SG_PW', '...'
 end
 
 config_env :development, :test do
