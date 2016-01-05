@@ -26,6 +26,7 @@ class APITraViz < Sinatra::Base
       tours = CheckTours.new.call(params[:country], settings)
     #rescue => e
       tours.nil? ? halt(404) : tours
+      #tours.nil? ? "None" : tours
       #halt 404, e.message
     #end
   end
