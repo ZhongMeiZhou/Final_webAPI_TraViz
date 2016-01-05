@@ -3,7 +3,7 @@ require 'config_env'
 require 'sendgrid-ruby'
 
 env_file = "#{__dir__}/../config/config_env.rb"
-ConfigEnv.path_to_config(env_file)
+ConfigEnv.path_to_config(env_file) unless ENV['AWS_REGION']
 
 class EmailWorker
   include Shoryuken::Worker

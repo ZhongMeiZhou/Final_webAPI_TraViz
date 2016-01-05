@@ -63,8 +63,9 @@ class APITraViz < Sinatra::Base
 
   send_email = lambda do
     content_type :json
-    EmailWorker.perform_async('user@email.com')
-    { message: 'Got it, sending it.' }.to_json
+    req = JSON.parse(request.body.read)
+    EmailWorker.perform_async(req['email'])
+    { message: 'Got it, working on it' }.to_json
   end
 
   # API Routes
@@ -73,7 +74,7 @@ class APITraViz < Sinatra::Base
   get "/#{settings.api_ver}/tours/:id", &get_tour_id
   post "/#{settings.api_ver}/tours", &check_tours
   post "/#{settings.api_ver}/tour_compare", &tour_compare
-  get "/#{settings.api_ver}/send_email", &send_email
+  post "/#{settings.api_ver}/send_email", &send_email
 end
 
 
