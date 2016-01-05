@@ -22,13 +22,8 @@ class APITraViz < Sinatra::Base
   #Call the service check_tour
   get_country_tours = lambda do
     content_type :json
-    #begin
-      tours = CheckTours.new.call(params[:country], settings)
-    #rescue => e
-      tours.nil? ? halt(404) : tours
-      #tours.nil? ? "None" : tours
-      #halt 404, e.message
-    #end
+    tours = CheckTours.new.call(params[:country], settings)
+    tours.nil? ? halt(404) : tours
   end
 
   # Use the app_helper to get the data from DB
@@ -68,7 +63,7 @@ class APITraViz < Sinatra::Base
 
   send_email = lambda do
     content_type :json
-    EmailWorker.perform_async('csrordz@gmail.com')
+    EmailWorker.perform_async('user@email.com')
     { message: 'Got it, sending it.' }.to_json
   end
 
