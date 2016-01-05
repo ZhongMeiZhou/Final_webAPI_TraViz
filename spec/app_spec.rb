@@ -14,17 +14,17 @@ describe 'Getting tour listings' do
   CONTENT_TYPE = 'application/json'
 
   it 'should receive parameter and return a json' do
-    VCR.use_cassette('honduras_tours') do
+    #VCR.use_cassette('honduras_tours') do
       get "/api/v2/tours/honduras.json"
-    end
+    #end
     last_response.must_be :ok?
     last_response.headers['Content-Type'].must_equal CONTENT_TYPE
   end
 
   it 'should return 404 for unknown country tour request' do
-    VCR.use_cassette('zamunda_tours') do
+    #VCR.use_cassette('zamunda_tours') do
       get '/api/v2/tours/zamunda.json'
-    end
+    #end
     last_response.status.must_equal 404
   end
 end
@@ -35,7 +35,7 @@ describe 'checking country tours from DB' do
     body = { country: 'belize' }
 
       # Check redirect URL from post request
-    VCR.use_cassette('tours_happy') do
+    #VCR.use_cassette('tours_happy') do
       post '/api/v2/tours', body.to_json, header
       last_response.must_be :redirect?
       next_location = last_response.location
@@ -54,7 +54,7 @@ describe 'checking country tours from DB' do
       #Check if redirected response has results
       last_response.body.wont_equal ''
       JSON.parse(last_response.body).count.must_be :>, 0
-    end
+    #end
   end
 
   it 'should return 404 for unknown countries' do
@@ -83,9 +83,9 @@ describe 'Check complex search method' do
       tour_categories: [],
       inputPriceRange: '0;999999' # by default will have values unlike country and category
     }
-    VCR.use_cassette('webappmethods') do
+    #VCR.use_cassette('webappmethods') do
       post '/api/v2/tour_compare', body.to_json, header
-    end
+    #end
 
     last_response.must_be :ok?
     last_response.body.wont_equal ''
@@ -101,9 +101,9 @@ describe 'Check complex search method' do
       tour_categories: ['History & Culture', 'Small Group Tours'],
       inputPriceRange: '0;999999'
     }
-    VCR.use_cassette('webappmethods') do
+    #VCR.use_cassette('webappmethods') do
       post '/api/v2/tour_compare', body.to_json, header
-    end
+    #end
 
     last_response.must_be :ok?
     last_response.body.wont_equal ''
@@ -119,9 +119,9 @@ describe 'Check complex search method' do
       tour_categories: ['Small Group Tours', 'Adventure', 'Sightseeing', 'Health & Wellness', 'History & Culture', 'Water Sports', 'Short Break', 'Cycling', 'Nature & Wildlife', 'Holidays, Festivals & Seasonal'],
       inputPriceRange: '0;999999'
     }
-    VCR.use_cassette('webappmethods') do
+    #VCR.use_cassette('webappmethods') do
       post '/api/v2/tour_compare', body.to_json, header
-    end
+    #end
 
     last_response.must_be :ok?
     last_response.body.wont_equal ''

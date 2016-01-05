@@ -2,6 +2,7 @@ require 'hirb'
 require 'sinatra/base'
 require 'config_env'
 require 'dalli'
+require_relative '../workers/worker'
 
 
 class APITraViz < Sinatra::Base
@@ -33,5 +34,5 @@ class APITraViz < Sinatra::Base
     })
     set :traviz_cache_ttl, 1.day
   end
-  
+
 end

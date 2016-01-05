@@ -7,6 +7,7 @@ require 'json'
 #require 'dalli'
 require_relative '../helpers/init'
 require_relative '../services/init'
+require_relative '../workers/worker'
 
 
 class APITraViz < Sinatra::Base
@@ -21,12 +22,8 @@ class APITraViz < Sinatra::Base
   #Call the service check_tour
   get_country_tours = lambda do
     content_type :json
-    #begin
-      tours = CheckTours.new.call(params[:country], settings)
-    #rescue => e
-      tours.nil? ? halt(404) : tours
-      #halt 404, e.message
-    #end
+    tours = CheckTours.new.call(params[:country], settings)
+    tours.nil? ? halt(404) : tours
   end
 
   # Use the app_helper to get the data from DB
@@ -64,12 +61,19 @@ class APITraViz < Sinatra::Base
     #CheckTours.new.call('st-lucia')
   end
 
+  send_email = lambda do
+    content_type :json
+    EmailWorker.perform_async('user@email.com')
+    { message: 'Got it, sending it.' }.to_json
+  end
+
   # API Routes
   get '/', &get_root
   get "/#{settings.api_ver}/tours/:country.json", &get_country_tours
   get "/#{settings.api_ver}/tours/:id", &get_tour_id
   post "/#{settings.api_ver}/tours", &check_tours
   post "/#{settings.api_ver}/tour_compare", &tour_compare
+  get "/#{settings.api_ver}/send_email", &send_email
 end
 
 
