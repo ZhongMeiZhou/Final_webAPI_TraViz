@@ -14,15 +14,15 @@ class CheckTours
 
   # Use the model lonely_planet_tours to scrape the country's tours
   def get_tours(country)
-   # cached_tours = get_cached_tours(country)
-    #if  cached_tours != nil
-     #   {"country" => country, "tours" => cached_tours}
-    #else
+    cached_tours = get_cached_tours(country)
+    if  cached_tours != nil
+        {"country" => country, "tours" => cached_tours}
+    else
         print "vamos a buscar en la base"
         tours = Tours.new(country)
-        #encache_traviz(country, JSON.parse(tours.to_json)['tours'])
+        encache_traviz(country, JSON.parse(tours.to_json)['tours'])
         tours
-    #end
+    end
   end
 
 

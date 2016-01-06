@@ -19,8 +19,8 @@ class CompareTours
   def countries_tours(country_arr, tour_categories, tour_price_min, tour_price_max)
     series_final = []
     drilldown_final = []
-    tours_listings = []
     tour_data_results = []
+    tours_listings = []
     results = Hash.new
     final_results = Hash.new
 
@@ -32,7 +32,6 @@ class CompareTours
 
        if !country_search.nil?
         series_data = []
-        drilldown_data = []
     
         country_tour_list = JSON.parse(country_search)['tours']
         #id = get_country_id(country, country_tour_list) # why id? should just take appropriate action if country exists or not // This method provide the ID if exists in DB. If not, it will save it.
@@ -45,11 +44,10 @@ class CompareTours
              h['category'] == category && price_in_range(strip_price(h['price']), tour_price_min, tour_price_max)
           end
           tour_drilldown_results = tour_data_results.map {|v| {y: strip_price(v['price']), name: v['title'][0,25]+'...'}}
-
+          tour_data_results.each {|d| tours_listings.push( {title:d['title'][0,76]+'..', country:country, url:d['img'], price:strip_price(d['price']),category:d['category'] } )}
           series_data.push( {y:tour_data_results.count, drilldown:drilldown_label}) 
           drilldown_final.push( {id: drilldown_label, name: drilldown_label, data: tour_drilldown_results} )
         end
-        tour_data_results.each {|d| tours_listings.push( {title:d['title'], country:country, url:d['img'] } )}
         series_final.push({name: country, data: series_data})
       end
     end.reject(&:blank?)
@@ -57,6 +55,7 @@ class CompareTours
     results['series'] = series_final
     results['drilldown'] = drilldown_final
     results['categories'] = tour_categories
+    results['countries'] = country_arr
     results['tours'] = tours_listings
     final_results['data'] = results
     
