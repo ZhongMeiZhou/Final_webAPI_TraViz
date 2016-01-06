@@ -19,6 +19,8 @@ class CompareTours
   def countries_tours(country_arr, tour_categories, tour_price_min, tour_price_max)
     series_final = []
     drilldown_final = []
+    tours_listings = []
+    tour_data_results = []
     results = Hash.new
     final_results = Hash.new
 
@@ -41,11 +43,13 @@ class CompareTours
           tour_data_results = tour_data.select do |h|
               #only allow categories selected and withing price range to be included
              h['category'] == category && price_in_range(strip_price(h['price']), tour_price_min, tour_price_max)
-          end.map {|v| {y: strip_price(v['price']), name: v['title'][0,25]+'...'}}
+          end
+          tour_drilldown_results = tour_data_results.map {|v| {y: strip_price(v['price']), name: v['title'][0,25]+'...'}}
 
           series_data.push( {y:tour_data_results.count, drilldown:drilldown_label}) 
-          drilldown_final.push({id: drilldown_label, name: drilldown_label, data: tour_data_results})
+          drilldown_final.push( {id: drilldown_label, name: drilldown_label, data: tour_drilldown_results} )
         end
+        tour_data_results.each {|d| tours_listings.push( {title:d['title'], country:country, url:d['img'] } )}
         series_final.push({name: country, data: series_data})
       end
     end.reject(&:blank?)
@@ -53,10 +57,11 @@ class CompareTours
     results['series'] = series_final
     results['drilldown'] = drilldown_final
     results['categories'] = tour_categories
+    results['tours'] = tours_listings
     final_results['data'] = results
     
     logger = Logger.new(STDOUT)
-    logger.info(JSON.pretty_generate(results))
+    logger.info(JSON.pretty_generate(final_results))
     final_results
   end
 end
