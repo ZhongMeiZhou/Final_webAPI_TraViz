@@ -17,77 +17,46 @@ class CompareTours
   private
 
   def countries_tours(country_arr, tour_categories, tour_price_min, tour_price_max)
+    series_final = []
+    drilldown_final = []
+    results = Hash.new
+    final_results = Hash.new
 
-    search_results = country_arr.each_with_index.map do |country,*|
+    search_results = country_arr.each_with_index.each do |country,*|
 
-
-      #begin
         country_search = CheckTours.new.call(country, @settings)
-
-
        # country_tour_list = JSON.parse(country_search)['tours']
        # country_search.nil? ? continue : country_tour_list = JSON.parse(country_search)['tours']
 
        if !country_search.nil?
-        results = Hash.new
-        data = []
+        series_data = []
+        drilldown_data = []
+    
         country_tour_list = JSON.parse(country_search)['tours']
-        id = get_country_id(country, country_tour_list) # why id? should just take appropriate action if country exists or not // This method provide the ID if exists in DB. If not, it will save it.
-
-
-        results['name'] = country
+        #id = get_country_id(country, country_tour_list) # why id? should just take appropriate action if country exists or not // This method provide the ID if exists in DB. If not, it will save it.
         tour_data = JSON.parse(Tour.find_by_country(country).tours)  # in first instance, I used ID here to look for the data.
 
         tour_categories.map do |category|
-          num_per_category = 0
-          num_per_category = tour_data.select do |h|
-           #if tour_categories.include?(category) do #add criteria to only allow categories selected to be included
+          drilldown_label = category+'-'+country
+          tour_data_results = tour_data.select do |h|
+              #only allow categories selected and withing price range to be included
              h['category'] == category && price_in_range(strip_price(h['price']), tour_price_min, tour_price_max)
-          # end
-          end.count
-          results['data'] = data.push([category, num_per_category])
+          end.map {|v| {y: strip_price(v['price']), name: v['title'][0,25]+'...'}}
+
+          series_data.push( {y:tour_data_results.count, drilldown:drilldown_label}) 
+          drilldown_final.push({id: drilldown_label, name: drilldown_label, data: tour_data_results})
         end
+        series_final.push({name: country, data: series_data})
+      end
+    end.reject(&:blank?)
 
-        #results['total_tours'] = tour_data.size
-        #results['all_tours'] = tour_data # handle return of tours to match criteria as well
-        #logger = Logger.new(STDOUT)
-        #logger.info(JSON.pretty_generate(results))
-        results
-        end
-      #rescue StandardError => e
-        #logger.info e.message
-        # halt 400
-      #end
-      # use check_db_tours helper to check if tour exists
-      #case check_db_tours(country, country_tour_list)
-      #  when 'Country does not exist'
-      #    # Use the model tour.rb to create a new data.
-      #    new_tour = Tour.new(country: country, tours: country_tour_list)
-      #    halt 500, "Error saving tours to the database" unless new_tour.save
-      #end
-
-      # get country tour array
-      #begin
-       # tour_data = JSON.parse(country_tour_list)
-      #rescue => e
-        #e.message
-      #end
-
-      # remove tours out of the price range
-     # tour_data.delete_if do |tour|
-       # tour_price = tour['price'].gsub('$','').to_i
-        #tour_price < tour_price_min || tour_price > tour_price_max
-      #end
-      # keep tours with specified categories
-      #tour_data.keep_if { |tour| tour_categories.include?(tour['category']) } unless tour_categories.empty?
-
-
-      #[country, tour_data.size, tour_data]
-    end
-    #logger.info(search_results.to_json)
-    search_results
-
-
+    results['series'] = series_final
+    results['drilldown'] = drilldown_final
+    results['categories'] = tour_categories
+    final_results['data'] = results
+    
+    logger = Logger.new(STDOUT)
+    logger.info(JSON.pretty_generate(results))
+    final_results
   end
-
 end
