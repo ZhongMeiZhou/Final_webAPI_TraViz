@@ -6,9 +6,7 @@ class CompareTours
   def call (req, settings)
     @settings = settings
     process_inputs(req)
-    price = !req['inputPriceRange'].nil? ? req['inputPriceRange'].split(";").map(&:to_i) : [0, 999999] 
-    tour_price_max = price[1] 
-    tour_comparison = countries_tours(@country_arr, @tour_categories, @tour_price_min, tour_price_max)
+    tour_comparison = countries_tours(@country_arr, @tour_categories, @tour_price_min, @tour_price_max)
     tour_comparison.to_json
   end
 
@@ -19,7 +17,7 @@ class CompareTours
     @country_arr = remove_nil(req, 'tour_countries')
     @tour_categories = remove_nil(req, 'tour_categories')
     @tour_price_min = extract_min_price(req['inputPriceRange'])
-    #tour_price_max = price[1] 
+    @tour_price_max = extract_min_price(req['inputPriceRange'])
   end
 
   # Remove nil values and return empty array
@@ -34,6 +32,10 @@ class CompareTours
 
   def extract_min_price(price_string)
     process_price(price_string)[0]
+  end
+
+  def extract_max_price(price_string)
+    process_price(price_string)[1]
   end
 
 
