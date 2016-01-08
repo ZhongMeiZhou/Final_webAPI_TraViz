@@ -6,7 +6,7 @@ class CompareTours
   def call (req, settings)
     @settings = settings
     country_arr = remove_nil(req, 'tour_countries')
-    tour_categories = !req['tour_categories'].nil? ? req['tour_categories'] : []
+    tour_categories = remove_nil(req, 'tour_categories')
     price = !req['inputPriceRange'].nil? ? req['inputPriceRange'].split(";").map(&:to_i) : [0, 999999]
     tour_price_min = price[0] #!req['tour_price_min'].nil? ? req['tour_price_min'].to_i : 0
     tour_price_max = price[1] #!req['tour_price_max'].nil? ? req['tour_price_max'].to_i : 999999
