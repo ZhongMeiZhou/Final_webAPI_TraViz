@@ -5,7 +5,7 @@ class CompareTours
   include LP_APIHelpers
   def call (req, settings)
     @settings = settings
-    country_arr = !req['tour_countries'].nil? ? req['tour_countries'] : []
+    country_arr = remove_nil(req, 'tour_countries')
     tour_categories = !req['tour_categories'].nil? ? req['tour_categories'] : []
     price = !req['inputPriceRange'].nil? ? req['inputPriceRange'].split(";").map(&:to_i) : [0, 999999]
     tour_price_min = price[0] #!req['tour_price_min'].nil? ? req['tour_price_min'].to_i : 0
@@ -17,8 +17,8 @@ class CompareTours
 
   private
 
-  def process_input(req)
-    
+  def remove_nil(req, value)
+    !req[value].nil? ? req['tour_countries'] : []
   end
 
   # This return an object with the information of tours using the input data
