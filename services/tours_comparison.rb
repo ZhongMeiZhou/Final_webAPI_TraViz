@@ -8,7 +8,7 @@ class CompareTours
     country_arr = remove_nil(req, 'tour_countries')
     tour_categories = remove_nil(req, 'tour_categories')
     price = !req['inputPriceRange'].nil? ? req['inputPriceRange'].split(";").map(&:to_i) : [0, 999999]
-    tour_price_min = price[0] #!req['tour_price_min'].nil? ? req['tour_price_min'].to_i : 0
+    tour_price_min = price[0] 
     tour_price_max = price[1] #!req['tour_price_max'].nil? ? req['tour_price_max'].to_i : 999999
     tour_comparison = countries_tours(country_arr, tour_categories, tour_price_min, tour_price_max)
     tour_comparison.to_json
