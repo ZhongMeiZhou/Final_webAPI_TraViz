@@ -16,6 +16,7 @@ class CompareTours
 
   private
 
+  # This return an object with the information of tours using the input data
   def countries_tours(country_arr, tour_categories, tour_price_min, tour_price_max)
     series_final = []
     drilldown_final = []
