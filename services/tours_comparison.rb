@@ -6,7 +6,7 @@ class CompareTours
   def call (req, settings)
     @settings = settings
     process_inputs(req)
-    tour_comparison = countries_tours(@country_arr, @tour_categories, @tour_price_min, @tour_price_max)
+    tour_comparison = countries_tours
     tour_comparison.to_json
   end
 
@@ -44,7 +44,7 @@ class CompareTours
 
 
   # This return an object with the information of tours using the input data
-  def countries_tours(country_arr, tour_categories, tour_price_min, tour_price_max)
+  def countries_tours
     series_final = []
     drilldown_final = []
     tour_data_results = []
@@ -52,7 +52,7 @@ class CompareTours
     results = Hash.new
     final_results = Hash.new
 
-    search_results = country_arr.each_with_index.each do |country,*|
+    search_results = @country_arr.each_with_index.each do |country,*|
 
         country_search = CheckTours.new.call(country, @settings)
        # country_tour_list = JSON.parse(country_search)['tours']
@@ -65,11 +65,11 @@ class CompareTours
         #id = get_country_id(country, country_tour_list) # why id? should just take appropriate action if country exists or not // This method provide the ID if exists in DB. If not, it will save it.
         tour_data = JSON.parse(Tour.find_by_country(country).tours)  # in first instance, I used ID here to look for the data.
 
-        tour_categories.map do |category|
+        @tour_categories.map do |category|
           drilldown_label = category+'-'+country
           tour_data_results = tour_data.select do |h|
               #only allow categories selected and withing price range to be included
-             h['category'] == category && price_in_range(strip_price(h['price']), tour_price_min, tour_price_max)
+             h['category'] == category && price_in_range(strip_price(h['price']), @tour_price_min, @tour_price_max)
           end
           tour_drilldown_results = tour_data_results.map {|v| {y: strip_price(v['price']), name: v['title'][0,25]+'...'}}
           tour_data_results.each {|d| tours_listings.push( {title:d['title'][0,76]+'..', country:country, url:d['img'], price:strip_price(d['price']),category:d['category'] } )}
@@ -82,8 +82,8 @@ class CompareTours
 
     results['series'] = series_final
     results['drilldown'] = drilldown_final
-    results['categories'] = tour_categories
-    results['countries'] = country_arr
+    results['categories'] = @tour_categories
+    results['countries'] = @country_arr
     results['tours'] = tours_listings
     final_results['data'] = results
     
