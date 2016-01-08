@@ -17,6 +17,7 @@ class CompareTours
 
   private
 
+  # Remove nil values and return empty array
   def remove_nil(req, value)
     !req[value].nil? ? req['tour_countries'] : []
   end
