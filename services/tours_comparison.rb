@@ -14,7 +14,12 @@ class CompareTours
     tour_comparison.to_json
   end
 
+
   private
+
+  def process_input(req)
+    
+  end
 
   # This return an object with the information of tours using the input data
   def countries_tours(country_arr, tour_categories, tour_price_min, tour_price_max)
