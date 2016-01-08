@@ -5,26 +5,36 @@ class CompareTours
   include LP_APIHelpers
   def call (req, settings)
     @settings = settings
-    country_arr = remove_nil(req, 'tour_countries')
-    tour_categories = remove_nil(req, 'tour_categories')
+    process_inputs(req)
     price = !req['inputPriceRange'].nil? ? req['inputPriceRange'].split(";").map(&:to_i) : [0, 999999]
     tour_price_min = price[0] 
     tour_price_max = price[1] 
-    tour_comparison = countries_tours(country_arr, tour_categories, tour_price_min, tour_price_max)
+    tour_comparison = countries_tours(@country_arr, @tour_categories, tour_price_min, tour_price_max)
     tour_comparison.to_json
   end
 
 
   private
 
+  def process_inputs(req)
+    @country_arr = remove_nil(req, 'tour_countries')
+    @tour_categories = remove_nil(req, 'tour_categories')
+  end
+
   # Remove nil values and return empty array
   def remove_nil(req, value)
     !req[value].nil? ? req['tour_countries'] : []
   end
 
-  
-  def process_price()
+
+  def process_price(req)
+
   end
+
+  def get_min_price
+  end
+
+
 
   # This return an object with the information of tours using the input data
   def countries_tours(country_arr, tour_categories, tour_price_min, tour_price_max)
