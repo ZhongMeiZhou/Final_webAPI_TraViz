@@ -13,6 +13,7 @@ class CompareTours
 
   private
 
+  # This method process all the variables and set class variables 
   def process_inputs(req)
     @country_arr = remove_nil(req, 'tour_countries')
     @tour_categories = remove_nil(req, 'tour_categories')
@@ -25,15 +26,17 @@ class CompareTours
     !req[value].nil? ? req['tour_countries'] : []
   end
 
-
+  # Process price atring and return an array of size 2 
   def process_price(price_string)
     price_string.nil? ? price_string.split(";").map(&:to_i) : [0, 999999]
   end
 
+  # return min price value
   def extract_min_price(price_string)
     process_price(price_string)[0]
   end
 
+  # return max price value
   def extract_max_price(price_string)
     process_price(price_string)[1]
   end
