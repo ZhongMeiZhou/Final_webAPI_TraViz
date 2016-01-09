@@ -20,14 +20,16 @@ class EmailWorker
       m.from = "acctservices.emfg@gmail.com"
       m.from_name = "#{team[rand(0..3)]} at TraViz"
       m.subject = 'Your Tour Compare Report'
-      m.text = "Here's the tour compare report you requested. Thank you for using TraViz."
+      m.text = sqs_msg
     end
     mail.add_attachment('/tmp/report.pdf', 'july_report.pdf')
     client.send(mail)
   end
 
   #This method created a pdf of the url 
-  def generate_pdf(url)
-
+  def create_pdf(url)
+    kit = PDFKit.new(url);
+    file = kit.to_file("../exports/pdf")
+    puts file
   end
 end

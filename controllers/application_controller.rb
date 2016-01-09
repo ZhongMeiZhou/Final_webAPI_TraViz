@@ -64,7 +64,7 @@ class APITraViz < Sinatra::Base
   send_email = lambda do
     content_type :json
     req = JSON.parse(request.body.read)
-    EmailWorker.perform_async(req['email'])
+    EmailWorker.perform_async("Here's the tour compare report you requested. Thank you for using TraViz.",req['email'])
     { message: 'Got it, working on it' }.to_json
   end
 
