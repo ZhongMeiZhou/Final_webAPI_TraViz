@@ -50,7 +50,7 @@ class CompareTours
         end
         series_final.push({name: country, data: series_data})
       end
-    end.reject(&:blank?)
+    end
 
     results['series'] = series_final
     results['drilldown'] = drilldown_final
