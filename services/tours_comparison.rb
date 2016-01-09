@@ -52,11 +52,9 @@ class CompareTours
 
     search_results = @country_arr.each_with_index.each do |country,*|
 
-        country_search = CheckTours.new.call(country, @settings)
-       # country_tour_list = JSON.parse(country_search)['tours']
-       # country_search.nil? ? continue : country_tour_list = JSON.parse(country_search)['tours']
+      country_search = CheckTours.new.call(country, @settings)
 
-       if !country_search.nil?
+      if !country_search.nil?
         series_data = []
     
         country_tour_list = JSON.parse(country_search)['tours']
