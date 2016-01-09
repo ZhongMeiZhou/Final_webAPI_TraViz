@@ -10,7 +10,10 @@ class EmailWorker
   include Shoryuken::Worker
   shoryuken_options queue: 'zmz_email_queue', auto_delete: true
 
-  def perform(sqs_msg, email)
+  def perform(sqs_msg, req)
+    puts 'Starting to sent and email'
+    email = req['email']
+    url = req['url']
     client = SendGrid::Client.new(api_user: ENV['SG_UN'], api_key: ENV['SG_PW'])
 
     team = ['Bayardo','Cesar','Eduardo','Nicole']
@@ -20,9 +23,12 @@ class EmailWorker
       m.from = "acctservices.emfg@gmail.com"
       m.from_name = "#{team[rand(0..3)]} at TraViz"
       m.subject = 'Your Tour Compare Report'
-      m.text = sqs_msg
+      m.text = "Here's the tour compare report you requested. Thank you for using TraViz."
     end
-    mail.add_attachment('/tmp/report.pdf', 'july_report.pdf')
+    puts "create pdf of #{url}"
+    create_pdf url
+    puts 'finish'
+    #mail.add_attachment('/tmp/report.pdf', 'july_report.pdf')
     client.send(mail)
   end
 
