@@ -17,12 +17,17 @@ class CompareTours
     @country_arr = remove_nil(req, 'tour_countries')
     @tour_categories = remove_nil(req, 'tour_categories')
     @tour_price_min = extract_min_price(req['inputPriceRange'])
-    @tour_price_max = extract_min_price(req['inputPriceRange'])
+    @tour_price_max = extract_max_price(req['inputPriceRange'])
+    puts 'Inputs'
+    puts @country_arr
+    puts @tour_categories
+    puts @tour_price_min
+    puts @tour_price_max
   end
 
   # Remove nil values and return empty array
   def remove_nil(req, value)
-    !req[value].nil? ? req['tour_countries'] : []
+    !req[value].nil? ? req[value] : []
   end
 
   # Process price atring and return an array of size 2 
@@ -40,26 +45,39 @@ class CompareTours
     process_price(price_string)[1]
   end
 
-  # This return an object with the information of tours using the input data
   def countries_tours
     series_final = []
     drilldown_final = []
+    tour_data_results = []
+    tours_listings = []
     results = Hash.new
     final_results = Hash.new
 
     search_results = @country_arr.each_with_index.each do |country,*|
 
-      country_search = CheckTours.new.call(country, @settings)
+        country_search = CheckTours.new.call(country, @settings)
+       # country_tour_list = JSON.parse(country_search)['tours']
+       # country_search.nil? ? continue : country_tour_list = JSON.parse(country_search)['tours']
 
-      if !country_search.nil?
+       if !country_search.nil?
+        series_data = []
     
         country_tour_list = JSON.parse(country_search)['tours']
+        #id = get_country_id(country, country_tour_list) # why id? should just take appropriate action if country exists or not // This method provide the ID if exists in DB. If not, it will save it.
         tour_data = JSON.parse(Tour.find_by_country(country).tours)  # in first instance, I used ID here to look for the data.
 
-        drilldown_data = get_drilldown_data_by_category(country, tour_data)
-        drilldown_final += drilldown_data[:drilldown_data]
-
-        series_final.push({name: country, data: drilldown_data[:series_data]})
+        @tour_categories.map do |category|
+          drilldown_label = category+'-'+country
+          tour_data_results = tour_data.select do |h|
+              #only allow categories selected and withing price range to be included
+             h['category'] == category && price_in_range(strip_price(h['price']), @tour_price_min, @tour_price_max)
+          end
+          tour_drilldown_results = tour_data_results.map {|v| {y: strip_price(v['price']), name: v['title'][0,25]+'...'}}
+          tour_data_results.each {|d| tours_listings.push( {title:d['title'][0,76]+'..', country:country, url:d['img'], price:strip_price(d['price']),category:d['category'] } )}
+          series_data.push( {y:tour_data_results.count, drilldown:drilldown_label}) 
+          drilldown_final.push( {id: drilldown_label, name: drilldown_label, data: tour_drilldown_results} )
+        end
+        series_final.push({name: country, data: series_data})
       end
     end.reject(&:blank?)
 
@@ -67,7 +85,7 @@ class CompareTours
     results['drilldown'] = drilldown_final
     results['categories'] = @tour_categories
     results['countries'] = @country_arr
-    results['tours'] = drilldown_final(:tours_listings)
+    results['tours'] = tours_listings
     final_results['data'] = results
     
     logger = Logger.new(STDOUT)
@@ -81,7 +99,7 @@ class CompareTours
     tours_listings = []
     @tour_categories.map do |category|
       drilldown_label = category+'-'+country
-      tour_data_results = filter_tours_by_category_and_price(tour_data, categories)
+      tour_data_results = filter_tours_by_category_and_price(tour_data, category)
       tour_drilldown_results = tour_data_results.map {|v| {y: strip_price(v['price']), name: v['title'][0,25]+'...'}}
       tour_data_results.each {|d| tours_listings.push( {title:d['title'][0,76]+'..', country:country, url:d['img'], price:strip_price(d['price']),category:d['category'] } )}
       series_data.push( {y:tour_data_results.count, drilldown:drilldown_label}) 
@@ -90,7 +108,7 @@ class CompareTours
     return {series_data: series_data , drilldown_data: drilldown_final , tours_listings: tours_listings}
   end
 
-  def filter_tours_by_category_and_price(tours_data, category)
+  def filter_tours_by_category_and_price(tour_data, category)
     result = tour_data.select do |h|
         #only allow categories selected and withing price range to be included
        h['category'] == category && price_in_range(strip_price(h['price']), @tour_price_min, @tour_price_max)
