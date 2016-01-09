@@ -41,8 +41,6 @@ class CompareTours
     process_price(price_string)[1]
   end
 
-
-
   # This return an object with the information of tours using the input data
   def countries_tours
     series_final = []
@@ -67,10 +65,7 @@ class CompareTours
 
         @tour_categories.map do |category|
           drilldown_label = category+'-'+country
-          tour_data_results = tour_data.select do |h|
-              #only allow categories selected and withing price range to be included
-             h['category'] == category && price_in_range(strip_price(h['price']), @tour_price_min, @tour_price_max)
-          end
+          tour_data_results = filter_tours_by_category_and_price(tour_data, categories)
           tour_drilldown_results = tour_data_results.map {|v| {y: strip_price(v['price']), name: v['title'][0,25]+'...'}}
           tour_data_results.each {|d| tours_listings.push( {title:d['title'][0,76]+'..', country:country, url:d['img'], price:strip_price(d['price']),category:d['category'] } )}
           series_data.push( {y:tour_data_results.count, drilldown:drilldown_label}) 
@@ -90,5 +85,12 @@ class CompareTours
     logger = Logger.new(STDOUT)
     logger.info(JSON.pretty_generate(final_results))
     final_results
+  end
+
+  def filter_tours_by_category_and_price(tours_data, category)
+    result = tour_data.select do |h|
+        #only allow categories selected and withing price range to be included
+       h['category'] == category && price_in_range(strip_price(h['price']), @tour_price_min, @tour_price_max)
+    end
   end
 end
