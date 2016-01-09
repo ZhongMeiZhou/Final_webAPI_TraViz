@@ -65,7 +65,8 @@ class APITraViz < Sinatra::Base
     content_type :json
     req = JSON.parse(request.body.read)
     puts 'Trying to save message into queue'
-    response = add_to_email_queue(req['email'],req['url']).data
+    puts req
+    response = add_to_email_queue(req['email'],req['url'],req['params']).data
 
     { message: 'Got it, working on it' }.to_json
 
