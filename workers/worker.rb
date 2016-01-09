@@ -18,13 +18,13 @@ class EmailWorker
 
     client = SendGrid::Client.new(api_key: ENV['SG_API_KEY'])
 
-    team = ['Bayardo','Cesar','Eduardo','Nicole']
+    #team = ['Bayardo','Cesar','Eduardo','Nicole']
 
     mail = SendGrid::Mail.new do |m|
       m.to = email
       m.from = "acctservices.emfg@gmail.com"
-      m.from_name = "#{team[rand(0..3)]} at TraViz"
-      m.subject = 'Your Tour Compare Report'
+      m.from_name = "Team TraViz"
+      m.subject = 'Your Tour List Report'
       m.text = "Here's the tour compare report you requested. Thank you for using TraViz."
     end
     # puts "create pdf of #{url}"
@@ -32,6 +32,9 @@ class EmailWorker
     # puts 'finish'
     mail.add_attachment(path, 'report.pdf')
     client.send(mail)
+
+    #remove file 
+    File.delete(path)
   end
 
   #This method created a pdf of the url 
@@ -40,7 +43,7 @@ class EmailWorker
     puts result['filtered_categories']
     writer = Slim2pdf::Writer.new
     writer.template = 'workers/template/tours.slim'
-    writer.data = result
+    writer.data = {results: result}
     writer.save_to_pdf(file_name) # saves rendered html as pdf file
   end
 
