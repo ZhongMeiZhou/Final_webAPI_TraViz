@@ -67,7 +67,7 @@ class CompareTours
         filter_categories += drilldown_data[:filter_categories]
         series_final.push({name: country, data: drilldown_data[:series_data]})
       end
-    end.reject(&:blank?) unless search_results.nil?
+    end #.reject(&:blank?) unless search_results.nil? issue??
 
     results['series'] = series_final
     results['drilldown'] = drilldown_final
