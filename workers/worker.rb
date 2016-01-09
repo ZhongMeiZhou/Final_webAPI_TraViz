@@ -12,41 +12,33 @@ class EmailWorker
   shoryuken_options queue: 'zmz_email_queue', auto_delete: true
 
   def perform(sqs_msg, data)
-    puts 'Starting to sent and email'
-    puts data
-    puts sqs_msg
-    puts "Message id : #{data['id']}"    
+    id = sqs_msg.message_id
     email = JSON.parse(data)["email"]
     url = JSON.parse(data)["url"]
-
-    puts 'values'
-    puts "email = #{email}"
-    puts "url = #{url}"
-
-    # get work
+    path = "exports/pdf/#{id}.pdf"
 
     client = SendGrid::Client.new(api_key: ENV['SG_API_KEY'])
 
     team = ['Bayardo','Cesar','Eduardo','Nicole']
 
     mail = SendGrid::Mail.new do |m|
-      m.to = 'esalazar922@gmail.com'
+      m.to = email
       m.from = "acctservices.emfg@gmail.com"
       m.from_name = "#{team[rand(0..3)]} at TraViz"
       m.subject = 'Your Tour Compare Report'
       m.text = "Here's the tour compare report you requested. Thank you for using TraViz."
     end
     # puts "create pdf of #{url}"
-    create_pdf url
+    create_pdf(url, path)
     # puts 'finish'
-    # #mail.add_attachment('/tmp/report.pdf', 'july_report.pdf')
+    mail.add_attachment(path, 'report.pdf')
     client.send(mail)
   end
 
   #This method created a pdf of the url 
-  def create_pdf(url)
+  def create_pdf(url, file_name)
     kit = PDFKit.new(url);
-    puts 'pdf created'
-    puts kit.to_file('test.pdf')
+    kit.to_file(file_name)
+    puts kit
   end
 end
