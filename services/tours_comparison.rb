@@ -55,7 +55,6 @@ class CompareTours
       country_search = CheckTours.new.call(country, @settings)
 
       if !country_search.nil?
-        series_data = []
     
         country_tour_list = JSON.parse(country_search)['tours']
         #id = get_country_id(country, country_tour_list) # why id? should just take appropriate action if country exists or not // This method provide the ID if exists in DB. If not, it will save it.
@@ -64,7 +63,7 @@ class CompareTours
         drilldown_data = get_drilldown_data_by_category(country, tour_data)
         drilldown_final += drilldown_data[:drilldown_data]
 
-        series_final.push({name: country, data: series_data})
+        series_final.push({name: country, data: drilldown_data[:series_data]})
       end
     end.reject(&:blank?)
 
