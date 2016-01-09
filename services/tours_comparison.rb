@@ -21,15 +21,14 @@ class CompareTours
     drilldown_final = []
     tour_data_results = []
     tours_listings = []
+    filter_categories = []
     results = Hash.new
     final_results = Hash.new
 
     search_results = country_arr.each_with_index.each do |country,*|
 
         country_search = CheckTours.new.call(country, @settings)
-       # country_tour_list = JSON.parse(country_search)['tours']
-       # country_search.nil? ? continue : country_tour_list = JSON.parse(country_search)['tours']
-
+        
        if !country_search.nil?
         series_data = []
     
@@ -40,9 +39,10 @@ class CompareTours
         tour_categories.map do |category|
           drilldown_label = category+'-'+country
           tour_data_results = tour_data.select do |h|
-              #only allow categories selected and withing price range to be included
+              #only allow categories selected and within price range to be included
              h['category'] == category && price_in_range(strip_price(h['price']), tour_price_min, tour_price_max)
           end
+          tour_data_results.map {|c| filter_categories.push({country: country, category: c['category']})}
           tour_drilldown_results = tour_data_results.map {|v| {y: strip_price(v['price']), name: v['title'][0,25]+'...'}}
           tour_data_results.each {|d| tours_listings.push( {title:d['title'][0,76]+'..', country:country, url:d['img'], price:strip_price(d['price']),category:d['category'] } )}
           series_data.push( {y:tour_data_results.count, drilldown:drilldown_label}) 
@@ -54,8 +54,8 @@ class CompareTours
 
     results['series'] = series_final
     results['drilldown'] = drilldown_final
-    results['categories'] = tour_categories
-    results['countries'] = country_arr
+    results['filtered_categories'] = filter_categories.uniq # use for listings of tour results
+    results['all_categories'] = tour_categories # need all categories for chart
     results['tours'] = tours_listings
     final_results['data'] = results
     
