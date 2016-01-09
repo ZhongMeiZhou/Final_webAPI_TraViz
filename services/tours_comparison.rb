@@ -61,18 +61,11 @@ class CompareTours
         #id = get_country_id(country, country_tour_list) # why id? should just take appropriate action if country exists or not // This method provide the ID if exists in DB. If not, it will save it.
         tour_data = JSON.parse(Tour.find_by_country(country).tours)  # in first instance, I used ID here to look for the data.
 
-        @tour_categories.map do |category|
-          drilldown_label = category+'-'+country
-          tour_data_results = tour_data.select do |h|
-              #only allow categories selected and withing price range to be included
-             h['category'] == category && price_in_range(strip_price(h['price']), @tour_price_min, @tour_price_max)
-          end
-          tour_drilldown_results = tour_data_results.map {|v| {y: strip_price(v['price']), name: v['title'][0,25]+'...'}}
-          tour_data_results.each {|d| tours_listings.push( {title:d['title'][0,76]+'..', country:country, url:d['img'], price:strip_price(d['price']),category:d['category'] } )}
-          series_data.push( {y:tour_data_results.count, drilldown:drilldown_label}) 
-          drilldown_final.push( {id: drilldown_label, name: drilldown_label, data: tour_drilldown_results} )
-        end
-        series_final.push({name: country, data: series_data})
+        drilldown_data = get_drilldown_data_by_category(country, tour_data)
+        drilldown_final += drilldown_data[:drilldown_data]
+        tours_listings += drilldown_data[:tours_listings]
+
+        series_final.push({name: country, data: drilldown_data[:series_data]})
       end
     end.reject(&:blank?)
 
