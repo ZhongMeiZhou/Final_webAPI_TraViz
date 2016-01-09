@@ -26,6 +26,8 @@ class EmailWorker
     client.send(mail)
   end
 
-  def generate_pdf
+  #This method created a pdf of the url 
+  def generate_pdf(url)
+
   end
 end
