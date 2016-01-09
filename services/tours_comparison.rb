@@ -89,7 +89,7 @@ class CompareTours
       drilldown_label = category+'-'+country
       
       tour_data_results = filter_tours_by_category_and_price(tour_data, category)
-      tour_drilldown_results = map_drilldown_results
+      tour_drilldown_results = map_drilldown_results(tour_data_results)
       
       tour_data_results.each {|d| tours_listings.push( {title:d['title'][0,76]+'..', country:country, url:d['img'], price:strip_price(d['price']),category:d['category'] } )}
       
