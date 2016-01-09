@@ -10,7 +10,6 @@ class CompareTours
     tour_comparison.to_json
   end
 
-
   private
 
   # This method process all the variables and set class variables 
@@ -45,8 +44,6 @@ class CompareTours
   def countries_tours
     series_final = []
     drilldown_final = []
-    tour_data_results = []
-    tours_listings = []
     results = Hash.new
     final_results = Hash.new
 
@@ -57,7 +54,6 @@ class CompareTours
       if !country_search.nil?
     
         country_tour_list = JSON.parse(country_search)['tours']
-        #id = get_country_id(country, country_tour_list) # why id? should just take appropriate action if country exists or not // This method provide the ID if exists in DB. If not, it will save it.
         tour_data = JSON.parse(Tour.find_by_country(country).tours)  # in first instance, I used ID here to look for the data.
 
         drilldown_data = get_drilldown_data_by_category(country, tour_data)
@@ -71,7 +67,7 @@ class CompareTours
     results['drilldown'] = drilldown_final
     results['categories'] = @tour_categories
     results['countries'] = @country_arr
-    results['tours'] = tours_listings
+    results['tours'] = drilldown_final(:tours_listings)
     final_results['data'] = results
     
     logger = Logger.new(STDOUT)
@@ -82,6 +78,7 @@ class CompareTours
   def get_drilldown_data_by_category(country, tour_data)
     series_data = []
     drilldown_final = []
+    tours_listings = []
     @tour_categories.map do |category|
       drilldown_label = category+'-'+country
       tour_data_results = filter_tours_by_category_and_price(tour_data, categories)
@@ -90,7 +87,7 @@ class CompareTours
       series_data.push( {y:tour_data_results.count, drilldown:drilldown_label}) 
       drilldown_final.push( {id: drilldown_label, name: drilldown_label, data: tour_drilldown_results} )
     end
-    return {series_data: series_data , drilldown_data: drilldown_final}
+    return {series_data: series_data , drilldown_data: drilldown_final , tours_listings: tours_listings}
   end
 
   def filter_tours_by_category_and_price(tours_data, category)
