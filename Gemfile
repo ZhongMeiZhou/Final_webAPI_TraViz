@@ -21,8 +21,8 @@ gem 'aws-sdk', '~> 2'
 gem 'dalli'
 gem 'shoryuken'
 gem 'sendgrid-ruby'
-gem 'pdfkit'
 gem 'wkhtmltopdf-binary'
+gem 'slim2pdf'
 
 group :test do
   gem 'minitest'

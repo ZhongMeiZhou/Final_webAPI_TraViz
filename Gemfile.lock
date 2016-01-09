@@ -89,7 +89,6 @@ GEM
     oga (1.3.1)
       ast
       ruby-ll (~> 2.1)
-    pdfkit (0.8.2)
     puma (2.15.3)
     rack (1.6.4)
     rack-protection (1.5.3)
@@ -128,6 +127,9 @@ GEM
     slim (3.0.6)
       temple (~> 0.7.3)
       tilt (>= 1.3.3, < 2.1)
+    slim2pdf (0.0.4)
+      slim (~> 3.0.2)
+      wkhtmltopdf-binary (~> 0.9.9.3)
     smtpapi (0.1.0)
     temple (0.7.6)
     thin (1.6.4)
@@ -176,7 +178,6 @@ DEPENDENCIES
   lonely_planet_tours
   minitest
   minitest-capybara
-  pdfkit
   puma
   rack
   rack-test
@@ -186,6 +187,7 @@ DEPENDENCIES
   sinatra-activerecord
   sinatra-flash
   slim
+  slim2pdf
   thin
   tux
   vcr
