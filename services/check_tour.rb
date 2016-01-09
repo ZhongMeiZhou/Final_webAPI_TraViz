@@ -16,6 +16,7 @@ class CheckTours
   def get_tours(country)
     cached_tours = get_cached_tours(country)
     if  cached_tours != nil
+        puts 'using chache'
         {"country" => country, "tours" => cached_tours}
     else
         print "vamos a buscar en la base"

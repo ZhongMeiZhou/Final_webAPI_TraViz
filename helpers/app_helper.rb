@@ -94,4 +94,21 @@ module LP_APIHelpers
       # publish message
       sqs.send_message(message_details)
 		end
+
+	def add_to_email_queue(email,result)
+			# create credentials
+      aws_access = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
+      # create queue subscriber
+      sqs = Aws::SQS::Client.new(region: ENV['AWS_REGION'], credentials: aws_access)
+      # get queue URL
+			queue_url = sqs.get_queue_url(queue_name: 'zmz_email_queue').queue_url
+      # prep message
+      msg = {email: email, result: result}
+      message_details = {
+        queue_url: 			queue_url,
+        message_body: 	msg.to_json
+      }
+      # publish message
+      sqs.send_message(message_details)
+		end
 end
