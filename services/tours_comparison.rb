@@ -18,11 +18,6 @@ class CompareTours
     @tour_categories = remove_nil(req, 'tour_categories')
     @tour_price_min = extract_min_price(req['inputPriceRange'])
     @tour_price_max = extract_max_price(req['inputPriceRange'])
-    puts 'Inputs'
-    puts @country_arr
-    puts @tour_categories
-    puts @tour_price_min
-    puts @tour_price_max
   end
 
   # Remove nil values and return empty array
