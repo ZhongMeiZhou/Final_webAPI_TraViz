@@ -87,13 +87,22 @@ class CompareTours
     tours_listings = []
     @tour_categories.map do |category|
       drilldown_label = category+'-'+country
+      
       tour_data_results = filter_tours_by_category_and_price(tour_data, category)
-      tour_drilldown_results = tour_data_results.map {|v| {y: strip_price(v['price']), name: v['title'][0,25]+'...'}}
+      tour_drilldown_results = map_drilldown_results
+      
       tour_data_results.each {|d| tours_listings.push( {title:d['title'][0,76]+'..', country:country, url:d['img'], price:strip_price(d['price']),category:d['category'] } )}
+      
       series_data.push( {y:tour_data_results.count, drilldown:drilldown_label}) 
+      
       drilldown_final.push( {id: drilldown_label, name: drilldown_label, data: tour_drilldown_results} )
     end
     return {series_data: series_data , drilldown_data: drilldown_final , tours_listings: tours_listings}
+  end
+
+  # Return object uses for drilldown
+  def map_drilldown_results(tour_data_results)
+    tour_data_results.map {|v| {y: strip_price(v['price']), name: v['title'][0,25]+'...'}}
   end
 
   def filter_tours_by_category_and_price(tour_data, category)
