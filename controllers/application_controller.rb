@@ -64,10 +64,11 @@ class APITraViz < Sinatra::Base
   send_email = lambda do
     content_type :json
     req = JSON.parse(request.body.read)
-    puts 'Trying to generate email pdf'
-    puts req
-    EmailWorker.perform_async(req)
+    puts 'Trying to save message into queue'
+    response = add_to_email_queue(req['email'],req['url']).data
+
     { message: 'Got it, working on it' }.to_json
+
   end
 
   # API Routes

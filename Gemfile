@@ -22,6 +22,7 @@ gem 'dalli'
 gem 'shoryuken'
 gem 'sendgrid-ruby'
 gem 'pdfkit'
+gem 'wkhtmltopdf-binary'
 
 group :test do
   gem 'minitest'
