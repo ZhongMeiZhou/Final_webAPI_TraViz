@@ -45,15 +45,14 @@ class CompareTours
     drilldown_final = []
     tour_data_results = []
     tours_listings = []
+    filter_categories = []
     results = Hash.new
     final_results = Hash.new
 
     search_results = @country_arr.each_with_index.each do |country,*|
 
         country_search = CheckTours.new.call(country, @settings)
-       # country_tour_list = JSON.parse(country_search)['tours']
-       # country_search.nil? ? continue : country_tour_list = JSON.parse(country_search)['tours']
-
+        
        if !country_search.nil?
         series_data = []
     
@@ -61,10 +60,11 @@ class CompareTours
         #id = get_country_id(country, country_tour_list) # why id? should just take appropriate action if country exists or not // This method provide the ID if exists in DB. If not, it will save it.
         tour_data = JSON.parse(Tour.find_by_country(country).tours)  # in first instance, I used ID here to look for the data.
 
+
         drilldown_data = get_drilldown_data_by_category(country, tour_data)
         drilldown_final += drilldown_data[:drilldown_data]
         tours_listings += drilldown_data[:tours_listings]
-
+        filter_categories += drilldown_data[:filter_categories]
         series_final.push({name: country, data: drilldown_data[:series_data]})
       end
     end.reject(&:blank?)
@@ -73,6 +73,8 @@ class CompareTours
     results['drilldown'] = drilldown_final
     results['categories'] = @tour_categories
     results['countries'] = @country_arr
+    results['filtered_categories'] = filter_categories.uniq # use for listings of tour results
+    results['all_categories'] = @tour_categories # need all categories for chart
     results['tours'] = tours_listings
     final_results['data'] = results
     
@@ -85,19 +87,20 @@ class CompareTours
     series_data = []
     drilldown_final = []
     tours_listings = []
+    filter_categories = []
     @tour_categories.map do |category|
       drilldown_label = category+'-'+country
       
       tour_data_results = filter_tours_by_category_and_price(tour_data, category)
       tour_drilldown_results = map_drilldown_results(tour_data_results)
-      
+      tour_data_results.map {|c| filter_categories.push({country: country, category: c['category']})}
       tour_data_results.each {|d| tours_listings.push( {title:d['title'][0,76]+'..', country:country, url:d['img'], price:strip_price(d['price']),category:d['category'] } )}
       
       series_data.push( {y:tour_data_results.count, drilldown:drilldown_label}) 
       
       drilldown_final.push( {id: drilldown_label, name: drilldown_label, data: tour_drilldown_results} )
     end
-    return {series_data: series_data , drilldown_data: drilldown_final , tours_listings: tours_listings}
+    return {series_data: series_data , drilldown_data: drilldown_final , tours_listings: tours_listings, filter_categories: filter_categories}
   end
 
   # Return object uses for drilldown
