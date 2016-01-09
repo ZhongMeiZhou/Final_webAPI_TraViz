@@ -1,6 +1,7 @@
 require 'shoryuken'
 require 'config_env'
 require 'sendgrid-ruby'
+require 'pdfkit'
 
 env_file = "#{__dir__}/../config/config_env.rb"
 ConfigEnv.path_to_config(env_file) unless ENV['AWS_REGION']
@@ -21,6 +22,10 @@ class EmailWorker
       m.subject = 'Your Tour Compare Report'
       m.text = "Here's the tour compare report you requested. Thank you for using TraViz."
     end
+    mail.add_attachment('/tmp/report.pdf', 'july_report.pdf')
     client.send(mail)
+  end
+
+  def generate_pdf
   end
 end
