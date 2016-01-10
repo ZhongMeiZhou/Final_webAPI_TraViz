@@ -75,11 +75,11 @@ describe 'checking country tours from DB' do
 end
 
 describe 'Check complex search method' do
-
+  country_list = ['Honduras', 'Belize', 'Nicaragua', "El-Salvador", "Chile", "Argentina", "Bolivia", "Panama", "Usa", "Spain", "Brazil", "dominican-republic", "Italy", "Taiwan", "China", "Singapore"]
   it 'should return tour data with required country filter' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = {
-      tour_countries: ['Honduras', 'Belize', 'Nicaragua'], #tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
+      tour_countries: [country_list[Random.rand(0..15)], country_list[Random.rand(0..15)], country_list[Random.rand(0..15)]], #tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
       tour_categories: [],
       inputPriceRange: '0;999999' # by default will have values unlike country and category
     }
@@ -97,7 +97,7 @@ describe 'Check complex search method' do
   it 'should return tour data with country and category filters' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = {
-      tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
+      tour_countries: [country_list[Random.rand(0..15)], country_list[Random.rand(0..15)], country_list[Random.rand(0..15)]], #tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
       tour_categories: ['History & Culture', 'Small Group Tours'],
       inputPriceRange: '0;999999'
     }
@@ -115,7 +115,7 @@ describe 'Check complex search method' do
   it 'should return tour data with all filters' do
     header = { 'CONTENT_TYPE' => 'application/json' }
     body = {
-      tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
+      tour_countries: [country_list[Random.rand(0..15)], country_list[Random.rand(0..15)], country_list[Random.rand(0..15)]],#tour_countries: ['Honduras', 'Belize', 'Nicaragua'],
       tour_categories: ['Small Group Tours', 'Adventure', 'Sightseeing', 'Health & Wellness', 'History & Culture', 'Water Sports', 'Short Break', 'Cycling', 'Nature & Wildlife', 'Holidays, Festivals & Seasonal'],
       inputPriceRange: '0;999999'
     }

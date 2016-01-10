@@ -24,7 +24,7 @@ module LP_APIHelpers
 			return nil
 	end
 
-	# Use model tour.rb
+	# Use model tour.rb, write data on DB.
 	def get_country_id(country, only_tours)
 		case check_db_tours(country, only_tours)
     	when 'Record exists'
