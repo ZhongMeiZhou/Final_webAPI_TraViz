@@ -15,11 +15,11 @@ class CheckTours
   # Use the model lonely_planet_tours to scrape the country's tours
   def get_tours(country)
     @settings.traviz_cache.fetch(country, ttl=@settings.traviz_cache_ttl) do
-      tours = Tours.new(country)
+      Tours.new(country)
     end
   rescue => e
     logger.info "GET_CACHED_TOURS failed: #{e}"
-    tours = Tours.new(country)
+    Tours.new(country)
     #cached_tours = get_cached_tours(country)
     #if  cached_tours != nil
     #    {"country" => country, "tours" => cached_tours}
