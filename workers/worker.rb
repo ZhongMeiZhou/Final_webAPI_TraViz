@@ -16,10 +16,10 @@ class EmailWorker
     result = JSON.parse(data)["result"]
     path = "exports/pdf/#{id}.pdf"
     file = create_pdf(result, path)
-    send_email(email)
+    send_email(email,path)
   end
 
-  def send_email(email)
+  def send_email(email,path)
     client = SendGrid::Client.new(api_key: ENV['SG_API_KEY'])
     mail = SendGrid::Mail.new do |m|
       m.to = email
