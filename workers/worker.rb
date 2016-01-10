@@ -18,7 +18,7 @@ class EmailWorker
 
     client = SendGrid::Client.new(api_key: ENV['SG_API_KEY'])
 
-    #team = ['Bayardo','Cesar','Eduardo','Nicole']
+    file = create_pdf(result, path)
 
     mail = SendGrid::Mail.new do |m|
       m.to = email
@@ -45,6 +45,7 @@ class EmailWorker
     writer.template = 'workers/template/tours.slim'
     writer.data = {results: result}
     writer.save_to_pdf(file_name) # saves rendered html as pdf file
+    return file_name
   end
 
 
