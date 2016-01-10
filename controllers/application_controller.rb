@@ -68,6 +68,9 @@ class APITraViz < Sinatra::Base
     puts req
     response = add_to_email_queue(req['email'],req['result']).data
 
+    # Run worker
+    #EmailWorker.perform_async('user@email.com')
+
     { message: 'Got it, working on it' }.to_json
 
   end
