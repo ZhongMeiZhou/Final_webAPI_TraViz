@@ -15,6 +15,7 @@ class EmailWorker
     email = JSON.parse(data)["email"]
     result = JSON.parse(data)["result"]
     path = "exports/pdf/#{id}.pdf"
+    create_pdf(result, path)
     file = create_pdf(result, path)
     send_email(email,path)
   end
@@ -28,7 +29,7 @@ class EmailWorker
       m.subject = 'Your Tour List Report'
       m.text = "Here's the tour compare report you requested. Thank you for using TraViz."
     end
-    create_pdf(result, path)
+    
     mail.add_attachment(path, 'report.pdf')
     client.send(mail)
     #remove file 
