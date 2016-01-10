@@ -15,11 +15,12 @@ class EmailWorker
     email = JSON.parse(data)["email"]
     result = JSON.parse(data)["result"]
     path = "exports/pdf/#{id}.pdf"
-
-    client = SendGrid::Client.new(api_key: ENV['SG_API_KEY'])
-
     file = create_pdf(result, path)
+    send_email(email)
+  end
 
+  def send_email(email)
+    client = SendGrid::Client.new(api_key: ENV['SG_API_KEY'])
     mail = SendGrid::Mail.new do |m|
       m.to = email
       m.from = "acctservices.emfg@gmail.com"
@@ -27,12 +28,9 @@ class EmailWorker
       m.subject = 'Your Tour List Report'
       m.text = "Here's the tour compare report you requested. Thank you for using TraViz."
     end
-    # puts "create pdf of #{url}"
     create_pdf(result, path)
-    # puts 'finish'
     mail.add_attachment(path, 'report.pdf')
     client.send(mail)
-
     #remove file 
     File.delete(path)
   end
@@ -47,8 +45,5 @@ class EmailWorker
     writer.save_to_pdf(file_name) # saves rendered html as pdf file
     return file_name
   end
-
-
-
 
 end
