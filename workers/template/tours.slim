@@ -32,16 +32,16 @@ html
 
     title ZmZ TraViz   
   body
-  	div class="row tour-list"
-  		- for i in results['filtered_categories']
-  			h2 style="clear: both;text-align:center;color:#4CAF50;" #{i['country']}
-  			p style="clear: both;text-align:center;font-weight:bold;" #{i['category']}
-		    - for tour in results['tours']
-					- if tour['country'].eql? i['country']
-						- if tour['category'].eql? i['category']
-		        	div class="col-sm-6 col-md-4"
-		         		a class="thumbnail" href="#{tour['url']}" target="_blank"
-		           	img src="#{tour['url']}" class="img-rounded" style="height: 200px; width: 100%; display: block;"
-		            div class="caption"
-		            h3 
-		            p class="alert alert-success" style="height:80px;" #{tour['title']} <b>$#{tour['price']}</b>
+    div class="row tour-list"
+      - for i in results['filtered_categories']
+        h2 style="clear: both;text-align:center;color:#4CAF50;" #{i['country']}
+        p style="clear: both;text-align:center;font-weight:bold;" #{i['category']}
+        - for tour in results['tours']
+          - if tour['country'].eql? i['country']
+            - if tour['category'].eql? i['category']
+              div class="col-sm-6 col-md-4"
+                a class="thumbnail" href="#{tour['url']}" target="_blank"
+                img src="#{tour['url']}" class="img-rounded" style="height: 200px; width: 100%; display: block;"
+                div class="caption"
+                h3 
+                p class="alert alert-success" style="height:80px;" #{tour['title']} <b>$#{tour['price']}</b>
